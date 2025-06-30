@@ -23,22 +23,37 @@ namespace GameRankAuth.Controllers
             {
                 if (!string.IsNullOrEmpty(user.UserName) && !string.IsNullOrEmpty(user.Email))
                 {
-                    Console.Write(user.UserName);
-                    Console.Write(user.password);
+                    
                     var UserWithSameName = await _userManager.FindByNameAsync(user.UserName);
                     var UserWithSameEmail = await _userManager.FindByEmailAsync(user.Email);
 
-                    if (UserWithSameName != null)
+                    if (UserWithSameName != null || UserWithSameEmail != null)
                     
-                        return Conflict(new { Message = "Пользователь с таким именем уже зарегистрирован" });
-                    
-                    if (UserWithSameEmail != null)
-                    
-                        return Conflict(new { Message = "Пользователь с такой почтой уже зарегистрирован" });
-                    
+                        return Conflict(new {success= false, type="username",
+                        message="Пользователь с таким именем или почтой уже зарегистрирован",
+                        field="username"});
+
+                    if (user.UserName.Length < 3)
+                        return Conflict(new
+                        {
+                            success = false,
+                            type = "username",
+                            message = "Имя пользователя не должно быть короче 3-х символов"
+                        });
+
+                    bool hasSymInPass = user.password.Any(char.IsLetter);
+                    if (user.password.Length < 9 || hasSymInPass == false)
+                        return Conflict(new
+                        {
+                            success = false,
+                            type = "password",
+                            message = "Длина пароля должна быть не меньше 9 символов и содержать хотя бы 1 букву"
+                        }
+                        );
+
                     else
                     {
-                        
+
 
                         // return RedirectToAction("EmailConfirm"); - Email reg -
                         var account = new IdentityUser { UserName = user.UserName, Email = user.Email };
@@ -46,7 +61,8 @@ namespace GameRankAuth.Controllers
 
                         if (result.Succeeded)
                         {
-                            return Ok(new { redirectUrl = "/Profile.html" });
+
+                            return Ok(new { RedirectUrl = "/Profile.html" });
                         }
                     }
                 }
@@ -63,4 +79,12 @@ namespace GameRankAuth.Controllers
         //public async Task<IActionResult> EmailConfirm
     }
 }
+
+// ######   ###  ###          ### ###  ####      #####   ##   ##  ##   ##    ###    #####     ######    ####    ##  ##
+//  ##  ##   ##  ##            ## ##    ##      ### ###  ##   ##  ###  ##   ## ##    ## ##      ##     ##  ##   ##  ##
+//  ##  ##    ####             ####     ##      ##   ##  ##   ##  #### ##  ##   ##   ##  ##     ##    ##        ##  ##
+//  #####      ##              ###      ##      ##   ##  ##   ##  #######  ##   ##   ##  ##     ##    ##        ######
+//  ##  ##     ##              ####     ##      ##   ##  ##   ##  ## ####  #######   ##  ##     ##    ##        ##  ##
+//  ##  ##     ##              ## ##    ##  ##  ### ###  ##   ##  ##  ###  ##   ##   ## ##      ##     ##  ##   ##  ##
+// ######     ####            ### ###  #######   #####    #####   ##   ##  ##   ##  #####     ######    ####    ##  ##
 
