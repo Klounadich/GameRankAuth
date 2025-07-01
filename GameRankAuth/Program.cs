@@ -12,13 +12,35 @@ builder.Services.AddSwaggerGen();
 // CORS Settings --------------------------------------------------------------------------------
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("DevPolicy", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://192.168.0.103").AllowAnyHeader().AllowAnyMethod().SetPreflightMaxAge(TimeSpan.FromMinutes(10)); 
+        policy.WithOrigins("http://192.168.0.103").AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetPreflightMaxAge(TimeSpan.FromMinutes(10)); 
     });
 });
 //  --------------------------------------------------------------------------------
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "GameRank.Auth";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.SlidingExpiration = true;
 
+    options.Events.OnRedirectToLogin = context => {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    };
+
+    options.Cookie.SameSite= SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+
+});
 // Identity Settings -----------------------------------------------------------------------------------------
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -45,9 +67,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
-app.UseCors("DevPolicy");
+app.UseCors("AllowAll");
 //app.UseHttpsRedirection(); - https замутил 
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

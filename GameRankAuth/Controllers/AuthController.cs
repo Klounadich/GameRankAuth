@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using GameRankAuth.Models;
+using Microsoft.AspNetCore.Authorization;
 namespace GameRankAuth.Controllers
 {
     [ApiController]
@@ -10,10 +11,12 @@ namespace GameRankAuth.Controllers
     public class AuthController:ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(UserManager<IdentityUser> userManager , SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager= signInManager;
         }
 
         [HttpPost("register")]
@@ -62,7 +65,14 @@ namespace GameRankAuth.Controllers
                         if (result.Succeeded)
                         {
 
-                            return Ok(new { RedirectUrl = "/Profile.html" });
+                            var checkUser = await _userManager.FindByNameAsync(user.UserName);
+                            var result1 = await _signInManager.PasswordSignInAsync(checkUser, user.password, isPersistent: true, lockoutOnFailure: false);
+                            if (result.Succeeded)
+                            {
+                                return Ok(new { RedirectUrl = "/Profile.html" });
+                            }
+                            else
+                                return BadRequest();
                         }
                     }
                 }
@@ -74,10 +84,47 @@ namespace GameRankAuth.Controllers
             }
         }
 
-        
+
 
         //public async Task<IActionResult> EmailConfirm
+
+        [HttpPost("authoriz")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Authorization([FromBody] User user)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(user.UserName) && !string.IsNullOrEmpty(user.password))
+                {
+                    var checkUser = await _userManager.FindByNameAsync(user.UserName);
+                    if (checkUser != null)
+                    {
+                        var result = await _signInManager.PasswordSignInAsync(checkUser, user.password, isPersistent: true, lockoutOnFailure: false);
+                        if (result.Succeeded)
+                        {
+                            Console.WriteLine("success!!!");
+                            return Ok(new { RedirectUrl = "/Profile.html" });
+                        }
+                        else
+                            Console.WriteLine(checkUser);
+                        Console.Write(result);
+                            return BadRequest(new { Message="НЕ РЕГАЕТСЯ"});
+                    }
+                    else
+                    {
+                        return Conflict();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
     }
+
 }
 
 // ######   ###  ###          ### ###  ####      #####   ##   ##  ##   ##    ###    #####     ######    ####    ##  ##
