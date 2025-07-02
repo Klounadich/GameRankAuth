@@ -21,10 +21,12 @@ namespace GameRankAuth.Controllers
         }
 
         [HttpGet("usershow")]
-        //[Authorize]
-        [AllowAnonymous]
+        [Authorize]
+        //[AllowAnonymous]
         public IActionResult ShowProfileData()
         {
+            var test = User.Identity.IsAuthenticated;
+            Console.WriteLine(test);
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var user = _context.Users.FirstOrDefault(user => user.Id == getUserId);
@@ -46,8 +48,8 @@ namespace GameRankAuth.Controllers
         }
 
         [HttpPost("signout")]
-        //[Authorize] ------------------ вопрос тута 
-        [AllowAnonymous]
+        [Authorize] 
+        //[AllowAnonymous]
         public async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();

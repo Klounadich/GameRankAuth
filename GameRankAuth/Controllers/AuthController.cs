@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using GameRankAuth.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.VisualBasic;
+using GameRankAuth.Services;
 namespace GameRankAuth.Controllers
 {
     [ApiController]
@@ -12,11 +14,13 @@ namespace GameRankAuth.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly JWTTokenService _jwtTokenService;
 
-        public AuthController(UserManager<IdentityUser> userManager , SignInManager<IdentityUser> signInManager)
+        public AuthController(UserManager<IdentityUser> userManager , SignInManager<IdentityUser> signInManager , JWTTokenService jWTToken)
         {
             _userManager = userManager;
             _signInManager= signInManager;
+            _jwtTokenService = jWTToken;
         }
 
         [HttpPost("register")]
@@ -58,21 +62,24 @@ namespace GameRankAuth.Controllers
                     {
 
 
-                        // return RedirectToAction("EmailConfirm"); - Email reg -
+                        
                         var account = new IdentityUser { UserName = user.UserName, Email = user.Email };
                         var result = await _userManager.CreateAsync(account, user.password);
-
+                        var checkUser = await _userManager.FindByNameAsync(user.UserName);
                         if (result.Succeeded)
                         {
-
-                            var checkUser = await _userManager.FindByNameAsync(user.UserName);
+                            Console.WriteLine("assssssssssssssssss");
+                            var token = _jwtTokenService.GenerateToken(account);
+                            
+                            
                             var result1 = await _signInManager.PasswordSignInAsync(checkUser, user.password, isPersistent: true, lockoutOnFailure: false);
                             if (result.Succeeded)
                             {
-                                return Ok(new { RedirectUrl = "/Profile.html" });
+                                Console.WriteLine("baul");
+                                return Ok(new {Message= token });
                             }
                             else
-                                return BadRequest();
+                                return Ok(new { Message = token });
                         }
                     }
                 }
@@ -80,12 +87,12 @@ namespace GameRankAuth.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { Message = ex.Message });
             }
         }
 
 
-
+        
         //public async Task<IActionResult> EmailConfirm
 
         [HttpPost("authoriz")]
@@ -102,8 +109,17 @@ namespace GameRankAuth.Controllers
                         var result = await _signInManager.PasswordSignInAsync(checkUser, user.password, isPersistent: true, lockoutOnFailure: false);
                         if (result.Succeeded)
                         {
-                            Console.WriteLine("success!!!");
-                            return Ok(new { RedirectUrl = "/Profile.html" });
+                                                       
+                                return Ok(new
+                                {
+                                    RedirectUrl = "/Profile.html",
+                                    UserName = checkUser.UserName
+                                });
+
+                            
+                           
+                            
+                            
                         }
                         else
                             Console.WriteLine(checkUser);

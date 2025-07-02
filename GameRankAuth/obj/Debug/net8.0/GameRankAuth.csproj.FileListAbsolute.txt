@@ -137,3 +137,11 @@ C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\GameR
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\ref\GameRankAuth.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\GameRankAuth.sourcelink.json
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
