@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<JWTTokenService>();
-
+builder.Services.AddAuth(builder.Configuration);
 
 
 var jwtSection = builder.Configuration.GetSection("jwt");
@@ -56,7 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseCors("AllowAll");
-//app.UseHttpsRedirection(); - https замутил 
+app.UseHttpsRedirection(); 
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -68,18 +68,24 @@ namespace GameRankAuth.Controllers
                         var checkUser = await _userManager.FindByNameAsync(user.UserName);
                         if (result.Succeeded)
                         {
-                            Console.WriteLine("assssssssssssssssss");
+                            
                             var token = _jwtTokenService.GenerateToken(account);
                             
                             
-                            var result1 = await _signInManager.PasswordSignInAsync(checkUser, user.password, isPersistent: true, lockoutOnFailure: false);
+                            
                             if (result.Succeeded)
                             {
-                                Console.WriteLine("baul");
-                                return Ok(new {Message= token });
+                                HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
+                                {
+                                    HttpOnly=true,
+                                    Secure=false,
+                                    SameSite=SameSiteMode.None,
+                                    Expires=DateTimeOffset.UtcNow.AddDays(1)
+                                });
+                                return Ok(new {Message= "Вы зареганы" });
                             }
                             else
-                                return Ok(new { Message = token });
+                                return Conflict(new { Message = "Error" });
                         }
                     }
                 }
@@ -106,25 +112,7 @@ namespace GameRankAuth.Controllers
                     var checkUser = await _userManager.FindByNameAsync(user.UserName);
                     if (checkUser != null)
                     {
-                        var result = await _signInManager.PasswordSignInAsync(checkUser, user.password, isPersistent: true, lockoutOnFailure: false);
-                        if (result.Succeeded)
-                        {
-                                                       
-                                return Ok(new
-                                {
-                                    RedirectUrl = "/Profile.html",
-                                    UserName = checkUser.UserName
-                                });
-
-                            
-                           
-                            
-                            
-                        }
-                        else
-                            Console.WriteLine(checkUser);
-                        Console.Write(result);
-                            return BadRequest(new { Message="НЕ РЕГАЕТСЯ"});
+                       
                     }
                     else
                     {
@@ -143,11 +131,5 @@ namespace GameRankAuth.Controllers
 
 }
 
-// ######   ###  ###          ### ###  ####      #####   ##   ##  ##   ##    ###    #####     ######    ####    ##  ##
-//  ##  ##   ##  ##            ## ##    ##      ### ###  ##   ##  ###  ##   ## ##    ## ##      ##     ##  ##   ##  ##
-//  ##  ##    ####             ####     ##      ##   ##  ##   ##  #### ##  ##   ##   ##  ##     ##    ##        ##  ##
-//  #####      ##              ###      ##      ##   ##  ##   ##  #######  ##   ##   ##  ##     ##    ##        ######
-//  ##  ##     ##              ####     ##      ##   ##  ##   ##  ## ####  #######   ##  ##     ##    ##        ##  ##
-//  ##  ##     ##              ## ##    ##  ##  ### ###  ##   ##  ##  ###  ##   ##   ## ##      ##     ##  ##   ##  ##
-// ######     ####            ### ###  #######   #####    #####   ##   ##  ##   ##  #####     ######    ####    ##  ##
+
 

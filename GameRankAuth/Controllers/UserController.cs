@@ -25,8 +25,7 @@ namespace GameRankAuth.Controllers
         //[AllowAnonymous]
         public IActionResult ShowProfileData()
         {
-            var test = User.Identity.IsAuthenticated;
-            Console.WriteLine(test);
+            
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var user = _context.Users.FirstOrDefault(user => user.Id == getUserId);
@@ -52,7 +51,7 @@ namespace GameRankAuth.Controllers
         //[AllowAnonymous]
         public async Task<IActionResult> SignOut()
         {
-            await _signInManager.SignOutAsync();
+             Response.Cookies.Delete("myToken");
             Console.WriteLine("exit"); // не высвечивается это 
             return Ok(new { RedirectUrl = "/Profile.html" });
         }
