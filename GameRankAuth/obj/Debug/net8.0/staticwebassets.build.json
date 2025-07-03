@@ -1,1 +1,11 @@
-{"Version":1,"Hash":"+pOA1ZcgCxqgH2afDdKeSs/5YRvKSd9zc/yuGrCnXiw=","Source":"GameRankAuth","BasePath":"_content/GameRankAuth","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "N+hl9zDhGh6tB9VJ9Qf1jqmVwJU0XQeuWFbdXNiDtso=",
+  "Source": "GameRankAuth",
+  "BasePath": "_content/GameRankAuth",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
