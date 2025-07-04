@@ -27,9 +27,9 @@ namespace GameRankAuth.Controllers
         {
             
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            var user = _context.Users.FirstOrDefault(user => user.Id == getUserId);
-            if (user == null)
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value; 
+            if (getUserId == null)
             {
                 Console.WriteLine("НЕГПОАОЛАЛА"); // код падает сюда
                 return BadRequest();
@@ -38,8 +38,8 @@ namespace GameRankAuth.Controllers
             {
                 return Ok(new
                 {
-                    UserName = user.UserName,
-                    Email=user.Email
+                    UserName = username,
+                    Email=email
 
                 });
             }
