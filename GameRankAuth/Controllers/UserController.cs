@@ -46,6 +46,12 @@ namespace GameRankAuth.Controllers
            
         }
 
+        [HttpGet("testauth")]
+        [Authorize]
+        public IActionResult test()
+        {
+            return Ok(new { Message = "login" });
+        }
         [HttpPost("signout")]
         [Authorize] 
         //[AllowAnonymous]

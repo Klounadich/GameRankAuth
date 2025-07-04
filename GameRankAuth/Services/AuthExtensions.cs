@@ -11,7 +11,8 @@ namespace GameRankAuth.Services
     {
         public static IServiceCollection AddAuth(this IServiceCollection services , IConfiguration configuration)
         {
-            var authSettings = configuration.GetSection(nameof(AuthSettings)).Get<AuthSettings>();
+            var authSettings = configuration["jwt:SecretKey"];
+            ;
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(i =>
             {
@@ -21,7 +22,7 @@ namespace GameRankAuth.Services
                     ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.SecretKey))
+                    IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings))
                 };
                 i.Events= new JwtBearerEvents { 
                     OnMessageReceived = context =>

@@ -79,6 +79,18 @@
         }
       }
     },
+    "/api/user/testauth": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/user/signout": {
       "post": {
         "tags": [

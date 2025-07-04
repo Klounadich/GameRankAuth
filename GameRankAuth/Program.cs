@@ -2,6 +2,8 @@ using GameRankAuth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using GameRankAuth.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,18 +14,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<JWTTokenService>();
 builder.Services.AddAuth(builder.Configuration);
-
-
 var jwtSection = builder.Configuration.GetSection("jwt");
 var authSettings = builder.Configuration.GetSection("jwt").Get<AuthSettings>();
 jwtSection.Bind(authSettings);
 builder.Services.AddSingleton(authSettings);
+
+/*builder.Services.ConfigureApplicationCookie(options => {
+    options.Cookie.SameSite = SameSiteMode.Lax;
+     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+     options.Cookie.HttpOnly= true;
+});
+онд бнопнясн
+*/
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+});
+
 // CORS Settings --------------------------------------------------------------------------------
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://192.168.0.103", "http://localhost:5000").AllowAnyHeader().AllowAnyMethod().AllowCredentials(); 
+        policy.WithOrigins("http://localhost" , "http://192.168.0.103").AllowAnyHeader().AllowAnyMethod().AllowCredentials(); 
     });
 });
 //  --------------------------------------------------------------------------------
@@ -56,7 +69,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseCors("AllowAll");
-app.UseHttpsRedirection(); 
+//app.UseHttpsRedirection(); 
 
 app.UseAuthentication();
 app.UseAuthorization();

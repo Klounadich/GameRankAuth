@@ -79,7 +79,7 @@ namespace GameRankAuth.Controllers
                                 {
                                     HttpOnly=true,
                                     Secure=false,
-                                    SameSite=SameSiteMode.None,
+                                    SameSite=SameSiteMode.Lax,
                                     Expires=DateTimeOffset.UtcNow.AddDays(1)
                                 });
                                 return Ok(new {Message= "Вы зареганы" });

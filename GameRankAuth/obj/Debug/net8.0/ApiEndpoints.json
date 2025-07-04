@@ -43,6 +43,16 @@
   },
   {
     "ContainingType": "GameRankAuth.Controllers.UserController",
+    "Method": "test",
+    "RelativePath": "api/user/testauth",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "GameRankAuth.Controllers.UserController",
     "Method": "ShowProfileData",
     "RelativePath": "api/user/usershow",
     "HttpMethod": "GET",
