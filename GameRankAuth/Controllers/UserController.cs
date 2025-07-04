@@ -27,19 +27,22 @@ namespace GameRankAuth.Controllers
         {
             
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine(getUserId);
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            Console.WriteLine(username);
             var email = User.FindFirst(ClaimTypes.Email)?.Value; 
-            if (getUserId == null)
+            Console.WriteLine(email);
+            if (email == null)
             {
                 Console.WriteLine("НЕГПОАОЛАЛА"); // код падает сюда
                 return BadRequest();
             }
-            else 
+            else
             {
                 return Ok(new
                 {
                     UserName = username,
-                    Email=email
+                    Email = email
 
                 });
             }

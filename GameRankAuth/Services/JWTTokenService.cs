@@ -28,9 +28,9 @@ namespace GameRankAuth.Services
             Console.WriteLine($"Expires = {_options.Expires}");
             var claims = new List<Claim>
             {
-                new Claim("UserName", user.UserName),
-                new Claim("Email", user.Email),
-                new Claim("id", user.Id.ToString())
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };           
 
             var token = new JwtSecurityToken(
