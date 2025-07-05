@@ -69,7 +69,7 @@ namespace GameRankAuth.Controllers
                         {
                             
                             var token = _jwtTokenService.GenerateToken(account);
-                            if (result.Succeeded)
+                            if (token != null)
                             {
                                 HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
                                 {

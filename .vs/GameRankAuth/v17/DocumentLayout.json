@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|c:\\users\\\u044F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\gamerankauth\\gamerankauth\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|solutionrelative:gamerankauth\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|c:\\users\\\u044F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\gamerankauth\\gamerankauth\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|solutionrelative:gamerankauth\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|c:\\users\\\u044F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\gamerankauth\\gamerankauth\\data\\authsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|solutionrelative:gamerankauth\\data\\authsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|c:\\users\\\u044F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\gamerankauth\\gamerankauth\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|solutionrelative:gamerankauth\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1FF822E4-379A-4B8C-B8D4-B6545AD05171}|GameRankAuth\\GameRankAuth.csproj|c:\\users\\\u044F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\gamerankauth\\gamerankauth\\services\\jwttokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -49,10 +49,6 @@
           "SelectedChildIndex": 4,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 5,
               "Title": "JWTTokenService.cs",
@@ -66,7 +62,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "GameRankAuth\\Controllers\\UserController.cs",
@@ -74,12 +70,11 @@
               "RelativeToolTip": "GameRankAuth\\Controllers\\UserController.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAYwDoAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-01T08:27:17.948Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-01T08:27:17.948Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AuthExtensions.cs",
               "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Services\\AuthExtensions.cs",
               "RelativeDocumentMoniker": "GameRankAuth\\Services\\AuthExtensions.cs",
@@ -87,12 +82,11 @@
               "RelativeToolTip": "GameRankAuth\\Services\\AuthExtensions.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAgwBgAAABiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T05:48:35.329Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-03T05:48:35.329Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Program.cs",
               "RelativeDocumentMoniker": "GameRankAuth\\Program.cs",
@@ -105,20 +99,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "GameRankAuth\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Controllers\\AuthController.cs",
               "RelativeToolTip": "GameRankAuth\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAI8AAAAAAAAAAAAgwIQAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAgwEsAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-29T06:16:41.349Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "AuthSettings.cs",
               "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Data\\AuthSettings.cs",
               "RelativeDocumentMoniker": "GameRankAuth\\Data\\AuthSettings.cs",
@@ -126,8 +120,7 @@
               "RelativeToolTip": "GameRankAuth\\Data\\AuthSettings.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T14:17:05.097Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-02T14:17:05.097Z"
             },
             {
               "$type": "Document",
@@ -164,6 +157,10 @@
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-06-30T06:26:44.513Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             }
           ]
         }
