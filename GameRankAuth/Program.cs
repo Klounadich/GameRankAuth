@@ -12,25 +12,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// JWT Settings -------------------------------------------------------------------------------
 builder.Services.AddScoped<JWTTokenService>();
 builder.Services.AddAuth(builder.Configuration);
 var jwtSection = builder.Configuration.GetSection("jwt");
 var authSettings = builder.Configuration.GetSection("jwt").Get<AuthSettings>();
 jwtSection.Bind(authSettings);
 builder.Services.AddSingleton(authSettings);
-
-/*builder.Services.ConfigureApplicationCookie(options => {
-    options.Cookie.SameSite = SameSiteMode.Lax;
-     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-     options.Cookie.HttpOnly= true;
-});
-онд бнопнясн
-*/
 builder.Services.AddAuthorization(options =>
 {
     options.DefaultPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
 });
-
+// -------------------------------------------------------------------------------------------
 // CORS Settings --------------------------------------------------------------------------------
 builder.Services.AddCors(options =>
 {

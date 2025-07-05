@@ -45,7 +45,8 @@ namespace GameRankAuth.Controllers
                         {
                             success = false,
                             type = "username",
-                            message = "Имя пользователя не должно быть короче 3-х символов"
+                            message = "Имя пользователя не должно быть короче 3-х символов",
+                            field="username"
                         });
 
                     bool hasSymInPass = user.password.Any(char.IsLetter);
@@ -54,15 +55,13 @@ namespace GameRankAuth.Controllers
                         {
                             success = false,
                             type = "password",
-                            message = "Длина пароля должна быть не меньше 9 символов и содержать хотя бы 1 букву"
+                            message = "Длина пароля должна быть не меньше 9 символов и содержать хотя бы 1 букву",
+                            field="password"
                         }
                         );
 
                     else
                     {
-
-
-                        
                         var account = new IdentityUser { UserName = user.UserName, Email = user.Email };
                         var result = await _userManager.CreateAsync(account, user.password);
                         var checkUser = await _userManager.FindByNameAsync(user.UserName);
@@ -70,9 +69,6 @@ namespace GameRankAuth.Controllers
                         {
                             
                             var token = _jwtTokenService.GenerateToken(account);
-                            
-                            
-                            
                             if (result.Succeeded)
                             {
                                 HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
@@ -82,14 +78,17 @@ namespace GameRankAuth.Controllers
                                     SameSite=SameSiteMode.Lax,
                                     Expires=DateTimeOffset.UtcNow.AddDays(1)
                                 });
-                                return Ok(new {Message= "Вы зареганы" });
+                                return Ok();
                             }
                             else
-                                return Conflict(new { Message = "Error" });
+                                return Conflict(new { Message = "There was an error creating your account, please try later" });
                         }
+                        else
+                            return Conflict(new { Message = "There was an error creating your account, please try later" });
                     }
                 }
-                return Ok();
+                
+                    return Conflict(new { Message = "There was an error creating your account, please try later" });
             }
             catch (Exception ex)
             {
@@ -99,7 +98,7 @@ namespace GameRankAuth.Controllers
 
 
         
-        //public async Task<IActionResult> EmailConfirm
+        
 
         [HttpPost("authoriz")]
         [AllowAnonymous]
@@ -110,13 +109,49 @@ namespace GameRankAuth.Controllers
                 if (!string.IsNullOrEmpty(user.UserName) && !string.IsNullOrEmpty(user.password))
                 {
                     var checkUser = await _userManager.FindByNameAsync(user.UserName);
-                    if (checkUser != null)
+                    
+                    var checkPass =  _userManager.PasswordHasher.VerifyHashedPassword(checkUser, checkUser.PasswordHash,user.password);
+                    
+                    
+                    if (checkUser != null && checkPass !=null)
                     {
-                       
+                        var getEmail = await _userManager.GetEmailAsync(user);
+                        var account = new IdentityUser { UserName=user.UserName , Email=getEmail};
+                        if (getEmail != null)
+                        {
+                            var token = _jwtTokenService.GenerateToken(account);
+
+                            if (token != null) 
+                            {
+                                HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
+                                {
+                                    HttpOnly = true,
+                                    SameSite = SameSiteMode.Lax,
+                                    Secure = false,
+                                    Expires = DateTime.Now.AddDays(1)
+                                });
+                                return Ok();
+                            }
+                            else
+                            {
+                                return Conflict(new { Message = "There was an error during authentication, please try later" });
+                            }
+                        }
+                        else
+                        {
+                            return Conflict(new { Message = "There was an error during authentication, please try later" });
+                        }
                     }
                     else
                     {
-                        return Conflict();
+                        
+                        return Conflict(new
+                        {
+                            success = false,
+                            type = "password",
+                            message = "Неправильно введено имя или пароль. Попробуйте снова",
+                            field = "password"
+                        });
                     }
                 }
             }

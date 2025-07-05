@@ -22,7 +22,7 @@ namespace GameRankAuth.Controllers
 
         [HttpGet("usershow")]
         [Authorize]
-        //[AllowAnonymous]
+        
         public IActionResult ShowProfileData()
         {
             
@@ -32,10 +32,10 @@ namespace GameRankAuth.Controllers
             Console.WriteLine(username);
             var email = User.FindFirst(ClaimTypes.Email)?.Value; 
             Console.WriteLine(email);
-            if (email == null)
+            if (email == null || username==null || getUserId ==null)
             {
-                Console.WriteLine("НЕГПОАОЛАЛА"); // код падает сюда
-                return BadRequest();
+                
+                return Conflict();
             }
             else
             {
@@ -49,19 +49,14 @@ namespace GameRankAuth.Controllers
            
         }
 
-        [HttpGet("testauth")]
-        [Authorize]
-        public IActionResult test()
-        {
-            return Ok(new { Message = "login" });
-        }
+        
         [HttpPost("signout")]
         [Authorize] 
-        //[AllowAnonymous]
+        
         public async Task<IActionResult> SignOut()
         {
              Response.Cookies.Delete("myToken");
-            Console.WriteLine("exit"); // не высвечивается это 
+             
             return Ok(new { RedirectUrl = "/Profile.html" });
         }
     }
