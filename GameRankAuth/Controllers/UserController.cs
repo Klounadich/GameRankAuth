@@ -23,7 +23,7 @@ namespace GameRankAuth.Controllers
         [HttpGet("usershow")]
         [Authorize]
         
-        public IActionResult ShowProfileData()
+        public async Task< IActionResult> ShowProfileData()
         {
             
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

@@ -46,9 +46,13 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
     
+    options.Password.RequireNonAlphanumeric = false;
+
+    // BruteForce 
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan= TimeSpan.FromMinutes(5);
+    options.Lockout.AllowedForNewUsers = true;
 });
 // -------------------------------------------------------------------------------------------------------------
 var app = builder.Build();
