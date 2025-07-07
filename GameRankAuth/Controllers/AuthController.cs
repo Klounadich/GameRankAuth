@@ -109,20 +109,20 @@ namespace GameRankAuth.Controllers
                 if (!string.IsNullOrEmpty(user.UserName) && !string.IsNullOrEmpty(user.password))
                 {
                     var checkUser = await _userManager.FindByNameAsync(user.UserName);
-                    Console.WriteLine($"имя:", checkUser);
+                    Console.WriteLine($"имя:{checkUser?.UserName}");
                     
                     var checkPass =  _userManager.PasswordHasher.VerifyHashedPassword(checkUser, checkUser.PasswordHash,user.password);
-                    Console.WriteLine($"пароль:", checkPass);
+                    Console.WriteLine($"пароль:{checkUser.PasswordHash}");
                     
-                    if (checkUser != null && checkPass !=null)
+                    if (checkUser != null && checkPass != PasswordVerificationResult.Failed)
                     {
-                        var getEmail = await _userManager.GetEmailAsync(user);
-                        Console.WriteLine($"email:", getEmail); // --- дальше хз
+                        var getEmail = await _userManager.GetEmailAsync(checkUser);
+                        Console.WriteLine($"email: {getEmail}"); 
                         var account = new IdentityUser { UserName=user.UserName , Email=getEmail};
                         if (getEmail != null)
                         {
                             var token = _jwtTokenService.GenerateToken(account);
-                            Console.WriteLine($"token:", token);
+                            Console.WriteLine($"token:{token}");
                             if (token != null) 
                             {
                                 HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
@@ -132,7 +132,7 @@ namespace GameRankAuth.Controllers
                                     Secure = false,
                                     Expires = DateTime.Now.AddDays(1)
                                 });
-                                return Ok(new {Message = "fuck"});
+                                return Ok(new {RedirectUrl = "/Profile.html"});
                             }
                             else
                             {
