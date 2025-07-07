@@ -69,7 +69,7 @@ namespace GameRankAuth.Controllers
                         {
                             
                             var token = _jwtTokenService.GenerateToken(account);
-                            if (token != null)
+                            if (token !=null)
                             {
                                 HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
                                 {
@@ -78,7 +78,7 @@ namespace GameRankAuth.Controllers
                                     SameSite=SameSiteMode.Lax,
                                     Expires=DateTimeOffset.UtcNow.AddDays(1)
                                 });
-                                return Ok();
+                                return Ok(new {Message = "fuck"});
                             }
                             else
                                 return Conflict(new { Message = "There was an error creating your account, please try later" });
@@ -109,18 +109,20 @@ namespace GameRankAuth.Controllers
                 if (!string.IsNullOrEmpty(user.UserName) && !string.IsNullOrEmpty(user.password))
                 {
                     var checkUser = await _userManager.FindByNameAsync(user.UserName);
+                    Console.WriteLine($"имя:", checkUser.UserName);
                     
                     var checkPass =  _userManager.PasswordHasher.VerifyHashedPassword(checkUser, checkUser.PasswordHash,user.password);
+                    Console.WriteLine($"пароль:", checkPass);
                     
-                    
-                    if (checkUser != null && checkPass !=null)
+                    if (checkUser != null && checkPass != PasswordVerificationResult.Failed)
                     {
                         var getEmail = await _userManager.GetEmailAsync(user);
+                        Console.WriteLine($"email:", getEmail); 
                         var account = new IdentityUser { UserName=user.UserName , Email=getEmail};
                         if (getEmail != null)
                         {
                             var token = _jwtTokenService.GenerateToken(account);
-
+                            Console.WriteLine($"token:", token);
                             if (token != null) 
                             {
                                 HttpContext.Response.Cookies.Append("myToken", token, new CookieOptions
@@ -130,7 +132,7 @@ namespace GameRankAuth.Controllers
                                     Secure = false,
                                     Expires = DateTime.Now.AddDays(1)
                                 });
-                                return Ok();
+                                return Ok(new {Message = ""});
                             }
                             else
                             {
