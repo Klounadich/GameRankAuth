@@ -2,7 +2,7 @@
 
 namespace GameRankAuth.Models
 {
-    public class User : IdentityUser
+    public class UserDto : IdentityUser
     {
         public string password { get; set; }
     }

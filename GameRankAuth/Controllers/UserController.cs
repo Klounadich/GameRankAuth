@@ -27,11 +27,11 @@ namespace GameRankAuth.Controllers
         {
             
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine(getUserId);
+            
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
-            Console.WriteLine(username);
+            
             var email = User.FindFirst(ClaimTypes.Email)?.Value; 
-            Console.WriteLine(email);
+            
             if (email == null || username==null || getUserId ==null)
             {
                 

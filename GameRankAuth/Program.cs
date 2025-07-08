@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using GameRankAuth.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using GameRankAuth.Models;
+using AutoMapper;
+using GameRankAuth.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,7 +38,9 @@ builder.Services.AddCors(options =>
 });
 //  --------------------------------------------------------------------------------
 
-
+// AutoMapper ------------------------------------------------------------------------------------
+builder.Services.AddAutoMapper(typeof (UserProfile));
+builder.Services.AddScoped<IAuthService ,  AuthService>();
 // Identity Settings -----------------------------------------------------------------------------------------
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

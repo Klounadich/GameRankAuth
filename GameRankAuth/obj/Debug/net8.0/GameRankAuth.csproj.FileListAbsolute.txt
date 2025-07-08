@@ -438,4 +438,5 @@ C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\refin
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\GameRankAuth.pdb
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\GameRankAuth.genruntimeconfig.cache
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\ref\GameRankAuth.dll
-C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

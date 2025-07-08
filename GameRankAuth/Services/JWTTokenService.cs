@@ -13,19 +13,19 @@ namespace GameRankAuth.Services
     public class JWTTokenService
     
     {
-        
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly AuthSettings _options;
-        public JWTTokenService( AuthSettings options)
+        public JWTTokenService( AuthSettings options ,UserManager<IdentityUser> userManager )
         {
-            
+            _userManager = userManager;
             _options = options;
         }
 
         
-        public string GenerateToken(IdentityUser user)
+        public string GenerateToken(IdentityUser user )
         {
 
-            Console.WriteLine($"Expires = {_options.Expires}");
+           
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
