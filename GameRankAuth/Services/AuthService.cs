@@ -2,6 +2,7 @@
 using GameRankAuth.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using GameRankAuth.Models;
 namespace GameRankAuth.Services
 {
     public class AuthService:IAuthService
@@ -21,11 +22,14 @@ namespace GameRankAuth.Services
          {
              if (!String.IsNullOrEmpty(request.UserName)|| !String.IsNullOrEmpty(request.Password) ||!String.IsNullOrEmpty(request.Email))
              {
-                 
                  var SameUser = await _context.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email);
                  if (SameUser != false)
                  {
-                     //exception
+                     return new AuthResult
+                     {
+                         Success = false,
+                         Errors = new []{"Пользователь с таким именем или почтой уже зарегистрирован"}
+                     };  
                  }
                  else
                  {
@@ -33,7 +37,7 @@ namespace GameRankAuth.Services
                      {
                          UserName = request.UserName,
                          Email = request.Email,
-                         // Id = request.Id
+                         
 
                      };
                      var result = await _userManager.CreateAsync(user, request.Password);
@@ -73,7 +77,7 @@ namespace GameRankAuth.Services
                  var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, false);
                  if (result.IsLockedOut)
                  {
-                     Console.WriteLine("GF");
+                     
                      return new AuthResult
                      {
                          Success = false,
@@ -83,7 +87,7 @@ namespace GameRankAuth.Services
 
                  if (result.Succeeded)
                  {
-                     Console.WriteLine("<UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK> <UNK>");
+                     
                      var getUser = await _userManager.FindByNameAsync(request.Username);
                      var user = new IdentityUser
                      {

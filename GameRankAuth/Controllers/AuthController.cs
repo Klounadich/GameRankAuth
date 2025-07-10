@@ -1,6 +1,7 @@
 ﻿using GameRankAuth.Data;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services;
+using GameRankAuth.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,8 +37,8 @@ namespace GameRankAuth.Controllers
             {
                 
                 var result = _authService.RegisterAsync(user);
-                
-                
+
+
                 if (result.Result.Success)
                 {
 
@@ -56,14 +57,19 @@ namespace GameRankAuth.Controllers
                     else
                         return Conflict(new { Message = "Ошибка при создании JWT токена. Попробуйте позже" });
                 }
-                else
-                    return Conflict(new { Message = "Ошибка при запросе в базу данных . Попробуйте позже" });
+
+                if (result.Result.Errors != null)
+                {
+                    return BadRequest(new {Message = result.Result.Errors});
+                }
+                    
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest(new { Message = "400 Error" });
             }
+            return BadRequest(new { Message = "400 Error" });
         }
 
 
@@ -112,7 +118,7 @@ namespace GameRankAuth.Controllers
                 return Conflict(new { Message = "There was an error during authentication, please try later" });
             }
 
-            return BadRequest("gg");
+            return BadRequest("404 Error");
         }
 
 

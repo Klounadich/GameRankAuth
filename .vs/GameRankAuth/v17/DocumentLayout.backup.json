@@ -143,18 +143,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AuthExtensions.cs",
-              "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Services\\AuthExtensions.cs",
-              "RelativeDocumentMoniker": "GameRankAuth\\Services\\AuthExtensions.cs",
-              "ToolTip": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Services\\AuthExtensions.cs",
-              "RelativeToolTip": "GameRankAuth\\Services\\AuthExtensions.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAABiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T05:48:35.329Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 5,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Controllers\\AuthController.cs",
@@ -236,6 +224,18 @@
               "ViewState": "AgIAAAAAAAAAAAAAAIBJwBQAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-06-30T06:26:44.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AuthExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Services\\AuthExtensions.cs",
+              "RelativeDocumentMoniker": "GameRankAuth\\Services\\AuthExtensions.cs",
+              "ToolTip": "C:\\Users\\\u042F\u0440\u043E\u0441\u043B\u0430\u0432\\my pets\\GameRankAuth\\GameRankAuth\\Services\\AuthExtensions.cs",
+              "RelativeToolTip": "GameRankAuth\\Services\\AuthExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T05:48:35.329Z"
             },
             {
               "$type": "Bookmark",
