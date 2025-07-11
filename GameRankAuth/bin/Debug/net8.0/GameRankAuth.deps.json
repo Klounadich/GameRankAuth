@@ -12,6 +12,7 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.6",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.16",
+          "Microsoft.AspNetCore.Identity.Specification.Tests": "5.0.17",
           "Microsoft.EntityFrameworkCore": "9.0.6",
           "Microsoft.EntityFrameworkCore.Design": "9.0.6",
           "Microsoft.EntityFrameworkCore.InMemory": "9.0.6",
@@ -109,6 +110,21 @@
           "lib/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll": {
             "assemblyVersion": "8.0.16.0",
             "fileVersion": "8.0.1625.21611"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Identity.Specification.Tests/5.0.17": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "5.0.0",
+          "Microsoft.Extensions.DependencyInjection": "9.0.6",
+          "Microsoft.Extensions.Logging": "9.0.6",
+          "xunit.assert": "2.9.3",
+          "xunit.extensibility.core": "2.9.3"
+        },
+        "runtime": {
+          "lib/net5.0/Microsoft.AspNetCore.Identity.Specification.Tests.dll": {
+            "assemblyVersion": "5.0.17.0",
+            "fileVersion": "5.0.1722.21507"
           }
         }
       },
@@ -514,6 +530,12 @@
             "assemblyVersion": "9.0.0.0",
             "fileVersion": "9.0.625.26613"
           }
+        }
+      },
+      "Microsoft.Extensions.Configuration/5.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "9.0.6",
+          "Microsoft.Extensions.Primitives": "9.0.6"
         }
       },
       "Microsoft.Extensions.Configuration.Abstractions/9.0.6": {
@@ -1296,6 +1318,13 @@
       "path": "microsoft.aspnetcore.identity.entityframeworkcore/8.0.16",
       "hashPath": "microsoft.aspnetcore.identity.entityframeworkcore.8.0.16.nupkg.sha512"
     },
+    "Microsoft.AspNetCore.Identity.Specification.Tests/5.0.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+XP6CUxmEJyRqyg0mfbYGFqoku9OnAAEaHFSo7esm6itzsEnhm1q2LvTtl0PwgYChJjiwjcB81O328wJMSYDqg==",
+      "path": "microsoft.aspnetcore.identity.specification.tests/5.0.17",
+      "hashPath": "microsoft.aspnetcore.identity.specification.tests.5.0.17.nupkg.sha512"
+    },
     "Microsoft.Bcl.AsyncInterfaces/7.0.0": {
       "type": "package",
       "serviceable": true,
@@ -1428,6 +1457,13 @@
       "sha512": "sha512-qPW2d798tBPZcRmrlaBJqyChf2+0odDdE+0Lxvrr0ywkSNl1oNMK8AKrOfDwyXyjuLCv0ua7p6nrUExCeXhCcg==",
       "path": "microsoft.extensions.caching.memory/9.0.6",
       "hashPath": "microsoft.extensions.caching.memory.9.0.6.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LN322qEKHjuVEhhXueTUe7RNePooZmS8aGid5aK2woX3NPjSnONFyKUc6+JknOS6ce6h2tCLfKPTBXE3mN/6Ag==",
+      "path": "microsoft.extensions.configuration/5.0.0",
+      "hashPath": "microsoft.extensions.configuration.5.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration.Abstractions/9.0.6": {
       "type": "package",

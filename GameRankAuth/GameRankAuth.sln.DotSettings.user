@@ -1,33 +1,19 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=02edd997_002D837f_002D472a_002Dacf7_002D92052e409f89/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="WrongRegisterUser #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::4F722B1F-E715-210D-9E94-143F4DB9E08F::net8.0::GameRankTest.AuthTest.WrongRegisterUser&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3ee22b90_002D5ac2_002D4413_002D84ce_002D2b3840ed3e38/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from UnitTest1.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;ProjectFile&gt;4F722B1F-E715-210D-9E94-143F4DB9E08F/d:GameRankAuth.Tests/f:UnitTest1.cs&lt;/ProjectFile&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=52c952f5_002D085f_002D4527_002D9603_002D9a8719e45688/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="WrongRegisterUser" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;4F722B1F-E715-210D-9E94-143F4DB9E08F/d:GameRankAuth.Tests/f:UnitTest1.cs&lt;/ProjectFile&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7a22a1c9_002D311e_002D4734_002D913c_002D2ceb5407b52a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="WrongRegisterUser #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::4F722B1F-E715-210D-9E94-143F4DB9E08F::net8.0::GameRankTest.AuthTest.WrongRegisterUser&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7c68f0e6_002D62a3_002D4e25_002Dab9f_002D7930e3819a36/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="WrongRegisterUser #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::4F722B1F-E715-210D-9E94-143F4DB9E08F::net8.0::GameRankTest.AuthTest.WrongRegisterUser&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8bc4381b_002D6fcb_002D4a82_002D83bc_002D2076391236b4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from UnitTest1.cs #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;ProjectFile&gt;4F722B1F-E715-210D-9E94-143F4DB9E08F/d:GameRankAuth.Tests/f:UnitTest1.cs&lt;/ProjectFile&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f5bdc5c2_002D5dbc_002D4dc7_002Dbbe5_002Dfd8a471b9992/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="WrongRegisterUser #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::812C760B-D492-4A17-AF50-F37A281253C3::net9.0::GameRankTest.AuthTest.WrongRegisterUser&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ff2ed73e_002Dbe0e_002D45fd_002D9a67_002D6bdb403f5276/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from UnitTest1.cs #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;4F722B1F-E715-210D-9E94-143F4DB9E08F/d:GameRankAuth.Tests/f:UnitTest1.cs&lt;/ProjectFile&gt;&#xD;
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ff2ed73e_002Dbe0e_002D45fd_002D9a67_002D6bdb403f5276/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from UnitTest1.cs #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFile&gt;4F722B1F-E715-210D-9E94-143F4DB9E08F/d:GameRankTests/f:UnitTests.cs&lt;/ProjectFile&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

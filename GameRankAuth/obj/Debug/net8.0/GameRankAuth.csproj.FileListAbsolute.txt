@@ -440,9 +440,6 @@ C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\AutoM
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\testhost.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\testhost.exe
-C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankAuth.Tests\obj\GameRankAuth.Tests.csproj.nuget.dgspec.json
-C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankAuth.Tests\obj\project.assets.json
-C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankAuth.Tests\obj\project.packagespec.json
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.TestPlatform.CoreUtilities.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.TestPlatform.PlatformAbstractions.dll
@@ -524,3 +521,8 @@ C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\zh-Ha
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Castle.Core.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Moq.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankTests\obj\GameRankTests.csproj.nuget.dgspec.json
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankTests\obj\project.assets.json
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankTests\obj\project.packagespec.json
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.Specification.Tests.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
