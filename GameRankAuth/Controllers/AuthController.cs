@@ -85,6 +85,7 @@ namespace GameRankAuth.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authorization([FromBody] LoginRequest user)
         {
+            
             try
             {
                 var result = _authService.LogInAsync(user);
@@ -103,7 +104,7 @@ namespace GameRankAuth.Controllers
                         });
                         return Ok(new { Message = "Success LogIn" });
                     }
-                    else
+                    
                     {
 
                         return Conflict(new { Message = "There was an error during authentication, please try later" });
@@ -111,6 +112,12 @@ namespace GameRankAuth.Controllers
 
                     
                 }
+                else
+                {
+                    return Conflict(result.Result.Errors);
+                }
+                
+                
             }
             
             catch (Exception)
@@ -118,7 +125,7 @@ namespace GameRankAuth.Controllers
                 return Conflict(new { Message = "There was an error during authentication, please try later" });
             }
 
-            return BadRequest("404 Error");
+            
         }
 
 

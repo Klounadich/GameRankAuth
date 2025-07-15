@@ -74,14 +74,14 @@ namespace GameRankAuth.Services
          {
              if (!string.IsNullOrEmpty(request.Username) || !string.IsNullOrEmpty(request.Password))
              {
-                 var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, false);
+                 var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, true);
                  if (result.IsLockedOut)
                  {
                      
                      return new AuthResult
                      {
                          Success = false,
-                         Errors = new[] { "Попытка BruteForce , " }
+                         Errors = new[]{ "Попытка BruteForce " }
                      };
                  }
 
@@ -105,12 +105,20 @@ namespace GameRankAuth.Services
                          };
                      }
                  }
+                 else
+                 {
+                     return new AuthResult
+                     {
+                         Success = false,
+                         Errors = new[]{ "Неправильное имя или пароль " }
+                     };
+                 }
              }
 
              return new AuthResult
              {
                  Success = false,
-                 Errors = new[] { "Переданы пустые строки" }
+                 Errors = ["Переданы пустые строки"]
              };
          }
 
