@@ -19,15 +19,17 @@ namespace GameRankAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IAuthService _authService;
         private const string JWTToken = "myToken";
+        private readonly ILogger<AuthController> _logger;
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService)
+            SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtTokenService = jWTToken;
             _context = context;
             _authService = authService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -35,7 +37,7 @@ namespace GameRankAuth.Controllers
         {
             try
             {
-                
+                _logger.LogInformation("Регистрация");
                 var result = _authService.RegisterAsync(user);
 
 
@@ -86,7 +88,7 @@ namespace GameRankAuth.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authorization([FromBody] LoginRequest user)
         {
-            
+            _logger.LogTrace("Авторизация");
             try
             {
                 var result = _authService.LogInAsync(user);

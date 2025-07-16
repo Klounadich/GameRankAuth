@@ -13,11 +13,13 @@ namespace GameRankAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        public UserController(ApplicationDbContext context , UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        private readonly ILogger<AuthController> _logger;
+        public UserController(ApplicationDbContext context , UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager ,  ILogger<AuthController> logger)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         [HttpGet("usershow")]
@@ -61,6 +63,7 @@ namespace GameRankAuth.Controllers
             }
             catch (Exception ex)
             {
+                    _logger.LogError("Ошибка удаления JWT токена . Требуется Debug");
                 return Conflict(new { Message = "Возникла ошибка сервера , попробуйте позже"});
             }
 
