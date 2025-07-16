@@ -35,7 +35,7 @@ namespace GameRankAuth.Controllers
             if (email == null || username==null || getUserId ==null)
             {
                 
-                return Conflict();
+                return Conflict(new {Message = "Данные профиля не были загружены "});
             }
             else
             {
@@ -55,8 +55,15 @@ namespace GameRankAuth.Controllers
         
         public async Task<IActionResult> SignOut()
         {
-             Response.Cookies.Delete("myToken");
-             
+            try
+            {
+                Response.Cookies.Delete("myToken");
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new { Message = "Возникла ошибка сервера , попробуйте позже"});
+            }
+
             return Ok(new { RedirectUrl = "/Profile.html" });
         }
     }

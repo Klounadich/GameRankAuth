@@ -66,13 +66,13 @@ namespace GameRankAuth.Services
              return new AuthResult
              {
                  Success = false,
-                 Errors = new[] {"Переданы пустые строки"}
+                 Errors = new[] {"Произошла ошибка системы , попробуйте позже"}
              };
          }
 
          public async Task<AuthResult> LogInAsync(LoginRequest request)
          {
-             if (!string.IsNullOrEmpty(request.Username) || !string.IsNullOrEmpty(request.Password))
+             if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
              {
                  var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, true);
                  if (result.IsLockedOut)
@@ -81,7 +81,7 @@ namespace GameRankAuth.Services
                      return new AuthResult
                      {
                          Success = false,
-                         Errors = new[]{ "Попытка BruteForce " }
+                         Errors = new[]{ "Вы совершили слишком много попыток , в целях безопасности , доступ к авторизации был заблокирован на 5 минут" }
                      };
                  }
 
@@ -104,6 +104,12 @@ namespace GameRankAuth.Services
                              Token = token,
                          };
                      }
+
+                     return new AuthResult
+                     {
+                         Success = false,
+                         Errors = new[] { "Ошибка авторизации , попробуйте позже" }
+                     };
                  }
                  else
                  {
@@ -114,12 +120,14 @@ namespace GameRankAuth.Services
                      };
                  }
              }
-
-             return new AuthResult
+             else
              {
-                 Success = false,
-                 Errors = ["Переданы пустые строки"]
-             };
+                 return new AuthResult
+                 {
+                     Success = false,
+                     Errors = ["Произошла ошибка системы , попробуйте позже"]
+                 };
+             }
          }
 
     }

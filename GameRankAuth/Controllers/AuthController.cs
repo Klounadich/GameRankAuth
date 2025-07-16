@@ -52,24 +52,25 @@ namespace GameRankAuth.Controllers
                             SameSite = SameSiteMode.Lax,
                             Expires = DateTimeOffset.UtcNow.AddDays(1)
                         });
-                        return Ok(new { Message = "Success Registration" });
+                        return Ok(new { Message = "Успешная регистрация" });
                     }
                     else
-                        return Conflict(new { Message = "Ошибка при создании JWT токена. Попробуйте позже" });
+                        return Conflict(new { Message = "Ошибка регистрации. Попробуйте позже" });
+                }
+                else
+                {
+                    return Conflict(result.Result.Errors);
                 }
 
-                if (result.Result.Errors != null)
-                {
-                    return BadRequest(new {Message = result.Result.Errors});
-                }
+                
                     
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new { Message = "400 Error" });
+                return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
             }
-            return BadRequest(new { Message = "400 Error" });
+            
         }
 
 
@@ -102,12 +103,12 @@ namespace GameRankAuth.Controllers
                             Secure = false,
                             Expires = DateTime.Now.AddDays(1)
                         });
-                        return Ok(new { Message = "Success LogIn" });
+                        return Ok(new { Message = "Успешная Авторизация" });
                     }
-                    
+                    else 
                     {
 
-                        return Conflict(new { Message = "There was an error during authentication, please try later" });
+                        return Conflict(new { Message = "Ошибка авторизации , попробуйте позже" });
                     }
 
                     
@@ -122,7 +123,7 @@ namespace GameRankAuth.Controllers
             
             catch (Exception)
             {
-                return Conflict(new { Message = "There was an error during authentication, please try later" });
+                return Conflict(new { Message = "Ошибка авторизации , попробуйте позже" });
             }
 
             
