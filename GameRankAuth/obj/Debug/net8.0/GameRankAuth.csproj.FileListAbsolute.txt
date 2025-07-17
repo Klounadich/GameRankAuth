@@ -525,3 +525,6 @@ C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameR
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankTests\obj\project.assets.json
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\GameRankTests\obj\project.packagespec.json
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.Specification.Tests.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

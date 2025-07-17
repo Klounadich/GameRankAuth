@@ -2,6 +2,7 @@
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services;
 using GameRankAuth.Models;
+using GameRankAuth.Modules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,17 @@ namespace GameRankAuth.Controllers
         {
             try
             {
+                var validator = new RegisterValidator();
+                
+                var validresult=validator.Validate(user);
+                if (!validresult.IsValid)
+                {
+                    foreach (var error in validresult.Errors)
+                    {
+                        ModelState.AddModelError(error.ErrorCode, error.ErrorMessage);
+                    }
+                    return Conflict(new {Message = ModelState});
+                }
                 _logger.LogInformation("Регистрация");
                 var result = _authService.RegisterAsync(user);
 
