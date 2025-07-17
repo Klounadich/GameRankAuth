@@ -32,7 +32,8 @@ namespace GameRankAuth.Controllers
             
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
             
-            var email = User.FindFirst(ClaimTypes.Email)?.Value; 
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
             
             if (email == null || username==null || getUserId ==null)
             {
@@ -44,7 +45,8 @@ namespace GameRankAuth.Controllers
                 return Ok(new
                 {
                     UserName = username,
-                    Email = email
+                    Email = email,
+                    Role = role
 
                 });
             }
