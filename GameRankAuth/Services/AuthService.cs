@@ -24,7 +24,7 @@ namespace GameRankAuth.Services
         }
          public  async Task<AuthResult> RegisterAsync(RegisterRequest request)
          {
-             if (!String.IsNullOrEmpty(request.UserName)|| !String.IsNullOrEmpty(request.Password) ||!String.IsNullOrEmpty(request.Email))
+             if (!String.IsNullOrEmpty(request.UserName)&& !String.IsNullOrEmpty(request.Password) &&!String.IsNullOrEmpty(request.Email))
              {
                  var SameUser = await _context.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email);
                  if (SameUser != false)
@@ -51,6 +51,8 @@ namespace GameRankAuth.Services
                      _logger.LogInformation("Создание аккаунта ");
                      if (result.Succeeded)
                      {
+                         await _userManager.AddToRoleAsync(user, "User");
+                         
                          _logger.LogInformation("Аккаунт создан , генерация JWT токена");
                          var token = _jwtTokenService.GenerateToken(user);
                          if (token != null)
@@ -105,6 +107,7 @@ namespace GameRankAuth.Services
 
                  if (result.Succeeded)
                  {
+                     
                      _logger.LogInformation("Пользователь авторизован , создание JWT токена");
                      var getUser = await _userManager.FindByNameAsync(request.Username);
                      var user = new IdentityUser
