@@ -20,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // JWT Settings -------------------------------------------------------------------------------
 builder.Services.AddScoped<JWTTokenService>();
+builder.Services.AddScoped<IChangeUserDataService, ChangeUserDataService>();
 builder.Services.AddAuth(builder.Configuration);
 var jwtSection = builder.Configuration.GetSection("jwt");
 var authSettings = builder.Configuration.GetSection("jwt").Get<AuthSettings>();

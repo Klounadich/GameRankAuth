@@ -45,9 +45,10 @@ namespace GameRankAuth.Controllers
                 {
                     foreach (var error in validresult.Errors)
                     {
-                        ModelState.AddModelError(error.ErrorCode, error.ErrorMessage);
+                        var firsterror= validresult.Errors.First().ErrorMessage;
+                        return Conflict(new { Message = firsterror });
                     }
-                    return Conflict(new {Message = ModelState});
+                    
                 }
                 _logger.LogInformation("Регистрация");
                 var result = _authService.RegisterAsync(user);
