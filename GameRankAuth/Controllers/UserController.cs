@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Models;
+using GameRankAuth.Modules;
 using GameRankAuth.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace GameRankAuth.Controllers
 {
@@ -32,81 +35,119 @@ namespace GameRankAuth.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeUsername([FromBody]  string UserName)
         {
-            string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var validator = new ChangeUserNameValidator();
+                
+            var validresult=validator.Validate(UserName);
             
-            
-            var result = await _changeUserDataService.ChangeUserNameAsync(Id, UserName);
-            if (result.Success)
-            {
-                var token = result.Token;
-                if (token != null)
+                string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (!validresult.IsValid)
                 {
-                    HttpContext.Response.Cookies.Append(JWTToken, token, new CookieOptions
+                    foreach (var error in validresult.Errors)
                     {
-                        HttpOnly = true,
-                        Secure = false,
-                        SameSite = SameSiteMode.Lax,
-                        Expires = DateTimeOffset.UtcNow.AddDays(1)
-                    });
-                    return Ok(new { Message = "Имя пользователя успешно изменено" });
+                        var firsterror= validresult.Errors.First().ErrorMessage;
+                        return BadRequest(new { Message = firsterror });
+                    }
+                    
+                }
+                var result = await _changeUserDataService.ChangeUserNameAsync(Id, UserName);
+                if (result.Success)
+                {
+                    var token = result.Token;
+                    if (token != null)
+                    {
+                        HttpContext.Response.SetCookie(token);
+                        return Ok(new { Message = "Имя пользователя успешно изменено" });
+                    }
+                    else
+                    {
+                        return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
+                    }
                 }
                 else
                 {
-                    return Conflict(new { Message = "Ошибка сервера , попробуйте позже" });
+                    return Conflict(new { Message = result.Errors });
                 }
-            }
-            else
-            {
-                return Conflict(new { Message = result.Errors });
-            }
+            
+            
         }
 
         [HttpPost("change-password")]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] UserData.ChangePasswordRequest request)
         {
+
+
+            var validator = new ChangePasswordValidator();
+
+            var validresult = validator.Validate(request);
+
             string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!validresult.IsValid)
+            {
+                foreach (var error in validresult.Errors)
+                {
+                    var firsterror = validresult.Errors.First().ErrorMessage;
+                    return BadRequest(new { Message = firsterror });
+                }
+            }
+
             var result = await _changeUserDataService.ChangePasswordAsync(Id, request);
-            if (result.Success)
-            {
-                
+                if (result.Success)
+                {
+
                     return Ok(new { Message = "Пароль успешно изменен" });
-                
-                
+
+
+                }
+                else
+                {
+                    return BadRequest(new { Message = result.Errors });
+                }
             }
-            else 
-            {
-                return Conflict(new { Message = result.Errors });
-            }
-        }
+
+
+
+
 
         [HttpPost("change-email")]
         [Authorize]
         public async Task<IActionResult> ChangeEmail([FromBody] string Email)
         {
+            var validator = new ChangeEmailValidator();
+
+            var validresult = validator.Validate(Email);
+
             string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _changeUserDataService.ChangeEmailAsync(Id, Email);
-            if (result.Success)
+
+            if (!validresult.IsValid)
             {
-                var token = result.Token;
-                if (token != null)
+                foreach (var error in validresult.Errors)
                 {
-                    HttpContext.Response.Cookies.Append(JWTToken, token, new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = false,
-                        SameSite = SameSiteMode.Lax,
-                        Expires = DateTimeOffset.UtcNow.AddDays(1)
-                    });
-                    return Ok(new { Message = "Email успешно изменен" });
+                    var firsterror = validresult.Errors.First().ErrorMessage;
+                    return BadRequest(new { Message = firsterror });
                 }
-                return Conflict(new { Message = "Ошибка сервера , попробуйте позже" });
             }
-            else 
-            {
-                return Conflict(new { Message = result.Errors });
+
+            var result = await _changeUserDataService.ChangeEmailAsync(Id, Email);
+                if (result.Success)
+                {
+                    var token = result.Token;
+                    if (token != null)
+                    {
+                        HttpContext.Response.SetCookie(token);
+                        return Ok(new { Message = "Email успешно изменен" });
+                    }
+
+                    return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
+                }
+                else
+                {
+                    return BadRequest(new { Message = result.Errors });
+                }
             }
-        }
+        
 
         [HttpGet("usershow")]
         [Authorize]
@@ -116,6 +157,14 @@ namespace GameRankAuth.Controllers
             
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
+            var user = await _context.Users.Select(x =>new { x.UserName,
+                
+                x.Id,
+                x.Email,
+                x.EmailConfirmed
+                }).FirstOrDefaultAsync(x => x.Id == getUserId);
+            
+            
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
             
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -124,7 +173,7 @@ namespace GameRankAuth.Controllers
             if (email == null || username==null || getUserId ==null)
             {
                 
-                return Conflict(new {Message = "Данные профиля не были загружены "});
+                return BadRequest(new {Message = "Данные профиля не были загружены "});
             }
             else
             {
@@ -132,7 +181,8 @@ namespace GameRankAuth.Controllers
                 {
                     UserName = username,
                     Email = email,
-                    Role = role
+                    Role = role,
+                    EmailVerified = user.EmailConfirmed
 
                 });
             }

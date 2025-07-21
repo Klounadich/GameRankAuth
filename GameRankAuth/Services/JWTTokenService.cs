@@ -22,6 +22,7 @@ namespace GameRankAuth.Services
             _options = options;
             _logger = logger;
         }
+        
 
         
         public string GenerateToken(IdentityUser user )

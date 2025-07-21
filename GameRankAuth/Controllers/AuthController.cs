@@ -6,13 +6,14 @@ using GameRankAuth.Modules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GameRankAuth.Controllers
 {
     [ApiController]
 
     [Route("api/auth")]
-    public class AuthController : ControllerBase
+    public  class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -21,16 +22,21 @@ namespace GameRankAuth.Controllers
         private readonly IAuthService _authService;
         private const string JWTToken = "myToken";
         private readonly ILogger<AuthController> _logger;
+        private readonly IVerifyService _verifyService;
+        
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , ILogger<AuthController> logger)
+            SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
+            ILogger<AuthController> logger , IVerifyService verifyService )
         {
+            _verifyService = verifyService;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtTokenService = jWTToken;
             _context = context;
             _authService = authService;
             _logger = logger;
+            
         }
 
         [HttpPost("register")]
@@ -45,36 +51,31 @@ namespace GameRankAuth.Controllers
                 {
                     foreach (var error in validresult.Errors)
                     {
+                        
                         var firsterror= validresult.Errors.First().ErrorMessage;
-                        return Conflict(new { Message = firsterror });
+                        return BadRequest(new { Message = firsterror });
                     }
                     
                 }
                 _logger.LogInformation("Регистрация");
-                var result = _authService.RegisterAsync(user);
+                var result = await _authService.RegisterAsync(user);
 
 
-                if (result.Result.Success)
+                if (result.Success)
                 {
 
-                    var token = result.Result.Token;
+                    var token = result.Token;
                     if (token != null)
                     {
-                        HttpContext.Response.Cookies.Append(JWTToken, token, new CookieOptions
-                        {
-                            HttpOnly = true,
-                            Secure = false,
-                            SameSite = SameSiteMode.Lax,
-                            Expires = DateTimeOffset.UtcNow.AddDays(1)
-                        });
+                        HttpContext.Response.SetCookie(token);
                         return Ok(new { Message = "Успешная регистрация" });
                     }
                     else
-                        return Conflict(new { Message = "Ошибка регистрации. Попробуйте позже" });
+                        return BadRequest(new { Message = "Ошибка регистрации. Попробуйте позже" });
                 }
                 else
                 {
-                    return Conflict(result.Result.Errors);
+                    return BadRequest(result.Errors);
                 }
 
                 
@@ -89,7 +90,21 @@ namespace GameRankAuth.Controllers
         }
 
 
-
+        [HttpPost("verify")]
+        [Authorize]
+        public async Task<IActionResult> VerifyEmailAsync()
+        {
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _verifyService.VerifyEmailAsync(id);
+            if (result.Success)
+            {
+                return Ok(new { Message = "Почта успешно подтверждена" });
+            }
+            else
+            {
+                return Conflict(new { Message = "Ошибка подтверждения почты , попробуйте позже" });
+            }
+        }
 
 
 
@@ -104,33 +119,27 @@ namespace GameRankAuth.Controllers
             _logger.LogTrace("Авторизация");
             try
             {
-                var result = _authService.LogInAsync(user);
-                if (result.Result.Success)
+                var result = await _authService.LogInAsync(user);
+                if (result.Success)
                 {
-                    var token = result.Result.Token;
+                    var token = result.Token;
 
                     if (token != null)
                     {
-                        HttpContext.Response.Cookies.Append(JWTToken, token, new CookieOptions
-                        {
-                            HttpOnly = true,
-                            SameSite = SameSiteMode.Lax,
-                            Secure = false,
-                            Expires = DateTime.Now.AddDays(1)
-                        });
+                        HttpContext.Response.SetCookie(token);
                         return Ok(new { Message = "Успешная Авторизация" });
                     }
                     else 
                     {
 
-                        return Conflict(new { Message = "Ошибка авторизации , попробуйте позже" });
+                        return BadRequest(new { Message = "Ошибка авторизации , попробуйте позже" });
                     }
 
                     
                 }
                 else
                 {
-                    return Conflict(result.Result.Errors);
+                    return BadRequest(result.Errors);
                 }
                 
                 
@@ -138,7 +147,7 @@ namespace GameRankAuth.Controllers
             
             catch (Exception)
             {
-                return Conflict(new { Message = "Ошибка авторизации , попробуйте позже" });
+                return BadRequest(new { Message = "Ошибка авторизации , попробуйте позже" });
             }
 
             

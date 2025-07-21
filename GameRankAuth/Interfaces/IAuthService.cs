@@ -6,6 +6,8 @@ namespace GameRankAuth.Interfaces
         Task<AuthResult> RegisterAsync(RegisterRequest request);
 
         Task<AuthResult> LogInAsync(LoginRequest request);
+        
+        
     }
     
 }
