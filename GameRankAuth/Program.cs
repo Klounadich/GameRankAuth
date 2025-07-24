@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using GameRankAuth.Models;
 using AutoMapper;
 using GameRankAuth.Interfaces;
+using GameRankAuth.Services.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<JWTTokenService>();
 builder.Services.AddScoped<IChangeUserDataService, ChangeUserDataService>();
 builder.Services.AddScoped<IVerifyService, VerifyEmailService>();
+builder.Services.AddScoped<RabbitMQService>();
 builder.Services.AddAuth(builder.Configuration);
 var jwtSection = builder.Configuration.GetSection("jwt");
 var authSettings = builder.Configuration.GetSection("jwt").Get<AuthSettings>();
@@ -29,6 +31,9 @@ jwtSection.Bind(authSettings);
 builder.Services.AddSingleton(authSettings);
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("AdminOnly", policy => 
+        policy.RequireAuthenticatedUser()
+            .RequireRole("Admin"));
     options.DefaultPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
 });
 // -------------------------------------------------------------------------------------------
@@ -88,7 +93,9 @@ using (var scope = app.Services.CreateScope())
 
 app.UseRouting();
 app.UseCors("AllowAll");
-//app.UseHttpsRedirection(); 
+//app.UseHttpsRedirection();
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();

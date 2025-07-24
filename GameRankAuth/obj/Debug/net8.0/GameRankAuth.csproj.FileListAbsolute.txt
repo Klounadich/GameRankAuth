@@ -528,3 +528,4 @@ C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\Micro
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\FluentValidation.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\Ярослав\my pets\GameRankAuth\GameRankAuth\bin\Debug\net8.0\RabbitMQ.Client.dll
