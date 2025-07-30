@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using GameRankAuth.Services.RabbitMQ;
 
 namespace GameRankAuth.Controllers
 {
@@ -23,12 +24,14 @@ namespace GameRankAuth.Controllers
         private const string JWTToken = "myToken";
         private readonly ILogger<AuthController> _logger;
         private readonly IVerifyService _verifyService;
+        private readonly RabbitMQService _rabbitMQService;
         
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
-            ILogger<AuthController> logger , IVerifyService verifyService )
+            ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService )
         {
+            _rabbitMQService = rabbitMQService;
             _verifyService = verifyService;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -98,6 +101,7 @@ namespace GameRankAuth.Controllers
             var result = await _verifyService.VerifyEmailAsync(id);
             if (result.Success)
             {
+                _rabbitMQService.Send();
                 return Ok(new { Message = "Почта успешно подтверждена" });
             }
             else
@@ -152,7 +156,14 @@ namespace GameRankAuth.Controllers
 
             
         }
-
+        
+        [HttpGet("checkaccess")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> CheckAccessAdmin()
+        {
+            _logger.LogInformation("Вошёл админ");
+            return Ok();
+        }
 
 
     }
