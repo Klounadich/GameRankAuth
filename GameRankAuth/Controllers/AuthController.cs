@@ -79,7 +79,7 @@ namespace GameRankAuth.Controllers
                         var userforadmin = new DataForAdmin
                         {
                             Id = user.Id,
-                            IPadress = userIp,
+                            IPAdress = userIp,
                             Status = "active"
 
                         };
