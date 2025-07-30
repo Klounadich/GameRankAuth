@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Конект админки бд 
 builder.Services.AddDbContext<AdminPanelDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AdminDBConnection  ")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AdminDBConnection")));
 builder.Services.AddControllers();
 builder.Logging.AddConsole();
 builder.Services.AddHttpContextAccessor();
