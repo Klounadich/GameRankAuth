@@ -171,12 +171,10 @@ namespace GameRankAuth.Controllers
             }).FirstOrDefaultAsync(x => x.Id == getUserId);
 
 
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-            var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            var role =  await _userManager.GetUsersInRoleAsync(getUserId);
 
-            if (email == null || username == null || getUserId == null)
+            if (user == null && role == null)
             {
 
                 return BadRequest(new { Message = "Данные профиля не были загружены " });
@@ -185,8 +183,8 @@ namespace GameRankAuth.Controllers
             {
                 return Ok(new
                 {
-                    UserName = username,
-                    Email = email,
+                    UserName = user.UserName,
+                    Email = user.Email,
                     Role = role,
                     EmailVerified = user.EmailConfirmed
 
