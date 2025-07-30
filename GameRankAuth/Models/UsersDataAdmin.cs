@@ -1,6 +1,6 @@
 namespace GameRankAuth.Models;
 
-public class DataForAdmin
+public class UsersStatus
 {
     public string Id { get; set; }
     public string IPAdress { get; set; }

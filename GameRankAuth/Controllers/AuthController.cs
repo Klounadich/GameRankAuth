@@ -75,10 +75,12 @@ namespace GameRankAuth.Controllers
                     {
                         HttpContext.Response.SetCookie(token);
                         string userIp = HttpContext.Connection.RemoteIpAddress.ToString();
-
-                        var userforadmin = new DataForAdmin
+                        var userf = new IdentityUser();
+                        string Id = userf.Id;
+                        _logger.LogInformation(Id);
+                        var userforadmin = new UsersStatus
                         {
-                            Id = user.Id,
+                            Id = Id,
                             IPAdress = userIp,
                             Status = "active"
 

@@ -5,5 +5,5 @@ namespace GameRankAuth.Data;
 public class AdminPanelDBContext: DbContext
 {
     public AdminPanelDBContext(DbContextOptions<AdminPanelDBContext> options) : base(options) { }
-    public DbSet<DataForAdmin> DataForAdmins { get; set; }
+    public DbSet<UsersStatus> UserDataAdmin { get; set; }
 }
