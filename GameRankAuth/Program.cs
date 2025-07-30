@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using GameRankAuth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -8,11 +9,14 @@ using GameRankAuth.Models;
 using AutoMapper;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services.RabbitMQ;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Конект админки бд 
+builder.Services.AddDbContext<AdminPanelDBContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AdminDBConnection")));
 builder.Services.AddControllers();
 builder.Logging.AddConsole();
 builder.Services.AddHttpContextAccessor();
@@ -31,10 +35,8 @@ jwtSection.Bind(authSettings);
 builder.Services.AddSingleton(authSettings);
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => 
-        policy.RequireAuthenticatedUser()
-            .RequireRole("Admin"));
-    options.DefaultPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+    
+        options.DefaultPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
 });
 // -------------------------------------------------------------------------------------------
 // CORS Settings --------------------------------------------------------------------------------

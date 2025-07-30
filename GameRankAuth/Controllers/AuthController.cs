@@ -25,12 +25,15 @@ namespace GameRankAuth.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IVerifyService _verifyService;
         private readonly RabbitMQService _rabbitMQService;
+        private readonly AdminPanelDBContext _adminPanelDBContext;
         
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
-            ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService )
+            ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService ,
+            AdminPanelDBContext adminPanelDBContext)
         {
+            _adminPanelDBContext = adminPanelDBContext;
             _rabbitMQService = rabbitMQService;
             _verifyService = verifyService;
             _userManager = userManager;
@@ -71,6 +74,18 @@ namespace GameRankAuth.Controllers
                     if (token != null)
                     {
                         HttpContext.Response.SetCookie(token);
+                        string userIp = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                        var userforadmin = new DataForAdmin
+                        {
+                            Id = user.Id,
+                            IPAdress = userIp,
+                            Status = "active"
+
+                        };
+                        _logger.LogInformation($"В админ панель добавлены данные:  {userforadmin}");
+                       _adminPanelDBContext.Add(userforadmin);
+                        await _adminPanelDBContext.SaveChangesAsync();
                         return Ok(new { Message = "Успешная регистрация" });
                     }
                     else
@@ -157,13 +172,7 @@ namespace GameRankAuth.Controllers
             
         }
         
-        [HttpGet("checkaccess")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> CheckAccessAdmin()
-        {
-            _logger.LogInformation("Вошёл админ");
-            return Ok();
-        }
+        
 
 
     }

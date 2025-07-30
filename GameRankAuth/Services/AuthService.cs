@@ -54,6 +54,7 @@ namespace GameRankAuth.Services
                          await _userManager.AddToRoleAsync(user, "User");
                          
                          _logger.LogInformation("Аккаунт создан , генерация JWT токена");
+                         
                          var token = _jwtTokenService.GenerateToken(user);
                          if (token != null)
                          {
