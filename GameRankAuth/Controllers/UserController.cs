@@ -20,9 +20,12 @@ namespace GameRankAuth.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<AuthController> _logger;
-        private readonly IChangeUserDataService  _changeUserDataService;
+        private readonly IChangeUserDataService _changeUserDataService;
         private const string JWTToken = "myToken";
-        public UserController(ApplicationDbContext context , UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager ,  ILogger<AuthController> logger , IChangeUserDataService changeUserDataService)
+
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager, ILogger<AuthController> logger,
+            IChangeUserDataService changeUserDataService)
         {
             _changeUserDataService = changeUserDataService;
             _context = context;
@@ -33,43 +36,44 @@ namespace GameRankAuth.Controllers
 
         [HttpPost("change-username")]
         [Authorize]
-        public async Task<IActionResult> ChangeUsername([FromBody]  string UserName)
+        public async Task<IActionResult> ChangeUsername([FromBody] string UserName)
         {
             var validator = new ChangeUserNameValidator();
-                
-            var validresult=validator.Validate(UserName);
-            
-                string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (!validresult.IsValid)
+            var validresult = validator.Validate(UserName);
+
+            string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!validresult.IsValid)
+            {
+                foreach (var error in validresult.Errors)
                 {
-                    foreach (var error in validresult.Errors)
-                    {
-                        var firsterror= validresult.Errors.First().ErrorMessage;
-                        return BadRequest(new { Message = firsterror });
-                    }
-                    
+                    var firsterror = validresult.Errors.First().ErrorMessage;
+                    return BadRequest(new { Message = firsterror });
                 }
-                var result = await _changeUserDataService.ChangeUserNameAsync(Id, UserName);
-                if (result.Success)
+
+            }
+
+            var result = await _changeUserDataService.ChangeUserNameAsync(Id, UserName);
+            if (result.Success)
+            {
+                var token = result.Token;
+                if (token != null)
                 {
-                    var token = result.Token;
-                    if (token != null)
-                    {
-                        HttpContext.Response.SetCookie(token);
-                        return Ok(new { Message = "Имя пользователя успешно изменено" });
-                    }
-                    else
-                    {
-                        return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
-                    }
+                    HttpContext.Response.SetCookie(token);
+                    return Ok(new { Message = "Имя пользователя успешно изменено" });
                 }
                 else
                 {
-                    return Conflict(new { Message = result.Errors });
+                    return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
                 }
-            
-            
+            }
+            else
+            {
+                return Conflict(new { Message = result.Errors });
+            }
+
+
         }
 
         [HttpPost("change-password")]
@@ -94,18 +98,18 @@ namespace GameRankAuth.Controllers
             }
 
             var result = await _changeUserDataService.ChangePasswordAsync(Id, request);
-                if (result.Success)
-                {
+            if (result.Success)
+            {
 
-                    return Ok(new { Message = "Пароль успешно изменен" });
+                return Ok(new { Message = "Пароль успешно изменен" });
 
 
-                }
-                else
-                {
-                    return BadRequest(new { Message = result.Errors });
-                }
             }
+            else
+            {
+                return BadRequest(new { Message = result.Errors });
+            }
+        }
 
 
 
@@ -131,49 +135,51 @@ namespace GameRankAuth.Controllers
             }
 
             var result = await _changeUserDataService.ChangeEmailAsync(Id, Email);
-                if (result.Success)
+            if (result.Success)
+            {
+                var token = result.Token;
+                if (token != null)
                 {
-                    var token = result.Token;
-                    if (token != null)
-                    {
-                        HttpContext.Response.SetCookie(token);
-                        return Ok(new { Message = "Email успешно изменен" });
-                    }
+                    HttpContext.Response.SetCookie(token);
+                    return Ok(new { Message = "Email успешно изменен" });
+                }
 
-                    return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
-                }
-                else
-                {
-                    return BadRequest(new { Message = result.Errors });
-                }
+                return BadRequest(new { Message = "Ошибка сервера , попробуйте позже" });
             }
-        
+            else
+            {
+                return BadRequest(new { Message = result.Errors });
+            }
+        }
+
 
         [HttpGet("usershow")]
         [Authorize]
-        
-        public async Task< IActionResult> ShowProfileData()
+
+        public async Task<IActionResult> ShowProfileData()
         {
-            
+
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
-            var user = await _context.Users.Select(x =>new { x.UserName,
-                
+
+            var user = await _context.Users.Select(x => new
+            {
+                x.UserName,
+
                 x.Id,
                 x.Email,
                 x.EmailConfirmed
-                }).FirstOrDefaultAsync(x => x.Id == getUserId);
-            
-            
+            }).FirstOrDefaultAsync(x => x.Id == getUserId);
+
+
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
-            
+
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
-            
-            if (email == null || username==null || getUserId ==null)
+
+            if (email == null || username == null || getUserId == null)
             {
-                
-                return BadRequest(new {Message = "Данные профиля не были загружены "});
+
+                return BadRequest(new { Message = "Данные профиля не были загружены " });
             }
             else
             {
@@ -186,9 +192,16 @@ namespace GameRankAuth.Controllers
 
                 });
             }
-           
+
         }
 
+        [HttpGet("checkaccess")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CheckAccessAdmin()
+        {
+            _logger.LogInformation("Вошёл админ");
+            return Ok();
+        }
         
         [HttpPost("signout")]
         [Authorize] 
