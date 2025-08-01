@@ -166,8 +166,9 @@ namespace GameRankAuth.Controllers
                 
             }
             
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new { Message = "Ошибка авторизации , попробуйте позже" });
             }
 

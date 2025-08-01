@@ -171,8 +171,8 @@ namespace GameRankAuth.Controllers
             }).FirstOrDefaultAsync(x => x.Id == getUserId);
 
 
-
-            var role =  await _userManager.GetUsersInRoleAsync(getUserId);
+            var userForRole = await _userManager.FindByIdAsync(getUserId);
+            var role =  await _userManager.GetRolesAsync(userForRole);  
 
             if (user == null && role == null)
             {

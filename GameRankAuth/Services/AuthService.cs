@@ -13,8 +13,11 @@ namespace GameRankAuth.Services
         private readonly JWTTokenService _jwtTokenService;
         private readonly ILogger<AuthService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AuthService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager , ApplicationDbContext context , IHttpContextAccessor accessor, JWTTokenService jwtTokenService , ILogger<AuthService> logger)
+        private readonly AdminPanelDBContext _adminPanelDBContext;
+        public AuthService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager , ApplicationDbContext context , IHttpContextAccessor accessor, 
+            JWTTokenService jwtTokenService , ILogger<AuthService> logger , AdminPanelDBContext adminPanelDBContext)
         {
+            _adminPanelDBContext = adminPanelDBContext;
             _jwtTokenService = jwtTokenService;
             _context = context;
             _userManager = userManager;
@@ -99,6 +102,15 @@ namespace GameRankAuth.Services
                      var context = _httpContextAccessor.HttpContext;
                      var ip = context.Connection.RemoteIpAddress.ToString();
                      _logger.LogWarning($"Попытка BruteForce. IP атакующего {ip}");
+                     SuspectUsers suspectUsers = new SuspectUsers
+                     {
+                        Id = "non-authorized",
+                        IpAdress = ip,
+                        cause = "Попытка BruteForce",
+                     };
+                     _adminPanelDBContext.Add(suspectUsers);
+                     _adminPanelDBContext.SaveChanges();
+                    
                      return new AuthResult
                      {
                          Success = false,
