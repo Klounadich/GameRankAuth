@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GameRankAuth")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fa64301b782aaa64e4265c564b31b4052aa3f170")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4790eb05eba3de9d06b5fdc9b52926a184fa4c9f")]
 [assembly: System.Reflection.AssemblyProductAttribute("GameRankAuth")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GameRankAuth")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

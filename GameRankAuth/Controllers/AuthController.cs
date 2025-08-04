@@ -75,8 +75,9 @@ namespace GameRankAuth.Controllers
                     {
                         HttpContext.Response.SetCookie(token);
                         string userIp = HttpContext.Connection.RemoteIpAddress.ToString();
-                        var userf = new IdentityUser();
-                        string Id = userf.Id;
+                        var getUser = await _userManager.FindByNameAsync(user.UserName);
+                        
+                        string Id = getUser.Id;
                         _logger.LogInformation(Id);
                         var userforadmin = new UsersStatus
                         {
