@@ -83,7 +83,8 @@ namespace GameRankAuth.Controllers
                         {
                             Id = Id,
                             IPAdress = userIp,
-                            Status = "active"
+                            Status = "active",
+                            UserName = user.UserName,
 
                         };
                         _logger.LogInformation($"В админ панель добавлены данные:  {userforadmin}");
