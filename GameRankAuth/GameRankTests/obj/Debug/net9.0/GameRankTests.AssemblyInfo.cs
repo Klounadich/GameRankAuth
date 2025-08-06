@@ -10,13 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("dcd301e3-1224-4c3a-aec8-4af0398277a4")]
-[assembly: System.Reflection.AssemblyCompanyAttribute("GameRankAuth")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("GameRankTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e85a51ef2b3dfd14344e122cb77655f3bcecd79f")]
-[assembly: System.Reflection.AssemblyProductAttribute("GameRankAuth")]
-[assembly: System.Reflection.AssemblyTitleAttribute("GameRankAuth")]
+[assembly: System.Reflection.AssemblyProductAttribute("GameRankTests")]
+[assembly: System.Reflection.AssemblyTitleAttribute("GameRankTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Создано классом WriteCodeFragment MSBuild.
