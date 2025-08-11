@@ -141,9 +141,16 @@ namespace GameRankAuth.Controllers
             
 
 
-            var emailVerified = User.FindFirstValue(ClaimTypes.Country);
-            Console.WriteLine(emailVerified);
-            return Ok(new { getStatusEmail = emailVerified });
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Console.WriteLine(id);
+            var getuser = await _userManager.FindByIdAsync(id);
+            if (getuser != null)
+            {
+                var emailVerified = await _userManager.IsEmailConfirmedAsync(getuser);
+                Console.WriteLine(emailVerified);
+                return Ok(new { getStatusEmail = emailVerified });
+            }
+            return BadRequest(new { Message = "<UNK> <UNK> <UNK>" });
         }
 
 
