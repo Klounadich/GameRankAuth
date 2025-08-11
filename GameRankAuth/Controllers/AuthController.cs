@@ -1,4 +1,5 @@
-﻿using GameRankAuth.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using GameRankAuth.Data;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services;
 using GameRankAuth.Models;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using GameRankAuth.Services.RabbitMQ;
+using Microsoft.AspNetCore.Authentication;
 
 namespace GameRankAuth.Controllers
 {
@@ -121,12 +123,27 @@ namespace GameRankAuth.Controllers
             if (result.Success)
             {
                 _rabbitMQService.Send();
+                var token = result.Token;
+                HttpContext.Response.SetCookie(token);
                 return Ok(new { Message = "Почта успешно подтверждена" });
+               
             }
             else
             {
                 return Conflict(new { Message = "Ошибка подтверждения почты , попробуйте позже" });
             }
+        }
+
+        [HttpGet("check-verify")]
+        [Authorize]
+        public async Task<IActionResult> CheckVerifyEmailAsync()
+        { 
+            
+
+
+            var emailVerified = User.FindFirstValue(ClaimTypes.Country);
+            Console.WriteLine(emailVerified);
+            return Ok(new { getStatusEmail = emailVerified });
         }
 
 

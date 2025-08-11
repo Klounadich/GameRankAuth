@@ -12,11 +12,14 @@ public class VerifyEmailService  : IVerifyService
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly JWTTokenService _jwtTokenService;
+    private readonly ILogger<VerifyEmailService> _logger;
     
-    public VerifyEmailService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+    public VerifyEmailService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager , JWTTokenService jwtTokenService , ILogger<VerifyEmailService> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _jwtTokenService = jwtTokenService;
+        _logger = logger;
     }
     public async Task<AuthResult> VerifyEmailAsync(string id)
     {
@@ -25,9 +28,12 @@ public class VerifyEmailService  : IVerifyService
         var result = await _userManager.ConfirmEmailAsync(user, token );
         if (result.Succeeded)
         {
+            var updToken =  _jwtTokenService.GenerateToken(user);
+            _logger.LogInformation($"Email confirmed ::: {updToken}");
             return new AuthResult
             {
                 Success = true,
+                Token = updToken,
 
             };
         }

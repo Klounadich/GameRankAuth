@@ -107,7 +107,7 @@ namespace GameRankAuth.Services
                         Id = "non-authorized",
                         IpAdress = ip,
                         cause = "Попытка BruteForce",
-                        UserName = "Guest"
+                        Username = "Guest"
                      };
                      _adminPanelDBContext.Add(suspectUsers);
                      _adminPanelDBContext.SaveChanges();

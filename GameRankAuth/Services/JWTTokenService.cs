@@ -35,7 +35,9 @@ namespace GameRankAuth.Services
                 new Claim(ClaimTypes.Role , role),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Country, user.EmailConfirmed.ToString())
+                
             };           
 
             var token = new JwtSecurityToken(
