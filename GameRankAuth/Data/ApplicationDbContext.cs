@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using GameRankAuth.Models;
 namespace GameRankAuth.Data
 {
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
@@ -8,6 +9,7 @@ namespace GameRankAuth.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+        public DbSet<UserData.UserDescription> UsersDescription { get; set; }
 
         
     }

@@ -1,3 +1,4 @@
+using GameRankAuth.Data;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,8 +10,11 @@ public class ChangeUserDataService: IChangeUserDataService
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly JWTTokenService _jwtTokenService;
-    public ChangeUserDataService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager , JWTTokenService jwtTokenService)
+    private readonly ApplicationDbContext _context;
+    public ChangeUserDataService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager ,
+        JWTTokenService jwtTokenService , ApplicationDbContext context)
     {
+        _context=context;
         _jwtTokenService =  jwtTokenService;
         _userManager = userManager;
         _signInManager = signInManager;
@@ -114,6 +118,37 @@ public class ChangeUserDataService: IChangeUserDataService
             {
                 Success = false,
                 Errors = new[] { "Ошибка сервера , попробуйте позже" }
+            };
+        }
+    }
+
+    public async Task<UserData.UserResult> ChangeDescriptionAsync(string userId, string Description)
+    {
+        var check = await _context.UsersDescription.FindAsync(userId);
+        if (check == null)
+        {
+            var newDescription = new UserData.UserDescription
+            {
+                Id = userId,
+                Description = Description
+            };
+            _context.UsersDescription.Add(newDescription);
+            await _context.SaveChangesAsync();
+            return new UserData.UserResult
+            {
+                Success = true,
+
+            };
+        }
+        else
+        {
+            var GetOldDescription = _context.UsersDescription.FirstOrDefault(x => x.Id == userId);
+           GetOldDescription.Description = Description;
+            await _context.SaveChangesAsync();
+            return new UserData.UserResult
+            {
+                Success = true,
+
             };
         }
     }

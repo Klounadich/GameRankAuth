@@ -112,7 +112,19 @@ namespace GameRankAuth.Controllers
         }
 
 
-
+        [HttpPost("change-description")]
+        [Authorize]
+        public async Task<IActionResult> ChangeDescription([FromBody] string Description)
+        {
+            // накинуть валидацию на длину и ноуценз
+            string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result= await _changeUserDataService.ChangeDescriptionAsync(Id, Description);
+            if (result.Success)
+            {
+                return Ok(new { Message = "Описание успешно изменено" });
+            }
+            return BadRequest(new { Message = result.Errors });
+        }
 
 
         [HttpPost("change-email")]
@@ -169,7 +181,7 @@ namespace GameRankAuth.Controllers
                 x.Email,
                 x.EmailConfirmed
             }).FirstOrDefaultAsync(x => x.Id == getUserId);
-
+            var Description = _context.UsersDescription.Where(x => x.Id == getUserId).Select(x => x.Description).FirstOrDefault();
 
             var userForRole = await _userManager.FindByIdAsync(getUserId);
             var role =  await _userManager.GetRolesAsync(userForRole);  
@@ -186,7 +198,8 @@ namespace GameRankAuth.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     Role = role,
-                    EmailVerified = user.EmailConfirmed
+                    EmailVerified = user.EmailConfirmed,
+                    Description = Description
 
                 });
             }

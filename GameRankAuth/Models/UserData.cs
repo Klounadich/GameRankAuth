@@ -24,4 +24,10 @@ public class UserData
         public string? Token { get; set; }
         public string[] Errors { get; set; } = [];
     }
+
+    public class UserDescription
+    {
+        public string Id { get; set; }
+        public string Description { get; set; }
+    }
 }
