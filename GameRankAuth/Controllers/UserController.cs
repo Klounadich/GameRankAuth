@@ -8,6 +8,7 @@ using GameRankAuth.Models;
 using GameRankAuth.Modules;
 using GameRankAuth.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 
 namespace GameRankAuth.Controllers
@@ -216,11 +217,17 @@ namespace GameRankAuth.Controllers
         }
 
         [HttpGet("checkaccess")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CheckAccessAdmin()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
+        public async Task<IActionResult> DeleteAccount()
         {
-            _logger.LogInformation("Вошёл админ");
-            return Ok();
+            _logger.LogInformation("Попытка удалить аккаунт");
+            var id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _changeUserDataService.DeleteAsync(id);
+            if (result.Success)
+            {
+                return Ok(new { Message = "Пользователь успешно удалён" });
+            }
+            return BadRequest();
         }
         
         [HttpPost("signout")]

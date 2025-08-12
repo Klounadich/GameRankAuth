@@ -11,9 +11,11 @@ public class ChangeUserDataService: IChangeUserDataService
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly JWTTokenService _jwtTokenService;
     private readonly ApplicationDbContext _context;
+    private readonly AdminPanelDBContext _adminPanelDBContext;
     public ChangeUserDataService(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager ,
-        JWTTokenService jwtTokenService , ApplicationDbContext context)
+        JWTTokenService jwtTokenService , ApplicationDbContext context , AdminPanelDBContext adminPanelDBContext)
     {
+        _adminPanelDBContext = adminPanelDBContext;
         _context=context;
         _jwtTokenService =  jwtTokenService;
         _userManager = userManager;
@@ -150,6 +152,51 @@ public class ChangeUserDataService: IChangeUserDataService
                 Success = true,
 
             };
+        }
+    }
+
+    public async Task<UserData.UserResult> DeleteAsync(string Id)
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            return new UserData.UserResult { Success = false, Errors = new[] { "Id не может быть пустым" } };
+        }
+
+       
+        var user = await _userManager.FindByIdAsync(Id);
+        if (user == null)
+        {
+            return new UserData.UserResult { Success = false, Errors = new []{"Пользователь не найден"} };
+        }
+
+        var delResult = await _userManager.DeleteAsync(user);
+        
+
+        
+        try
+        {
+            var userData = await _adminPanelDBContext.UserDataAdmin.FindAsync(Id);
+            if (userData != null)
+            {
+                _adminPanelDBContext.UserDataAdmin.Remove(userData);
+            }
+
+            var suspectUser = await _adminPanelDBContext.SuspectUsers.FindAsync(Id);
+            if (suspectUser != null)
+            {
+                _adminPanelDBContext.SuspectUsers.Remove(suspectUser);
+            }
+
+            await _adminPanelDBContext.SaveChangesAsync();
+            return new UserData.UserResult
+            {
+                Success = true
+            };
+        }
+        catch (Exception ex)
+        {
+            return new UserData.UserResult { Success = false,
+                Errors = new []{ex.Message} };
         }
     }
 }
