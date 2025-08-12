@@ -116,7 +116,16 @@ namespace GameRankAuth.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeDescription([FromBody] string Description)
         {
-            // накинуть валидацию на длину и ноуценз
+            var validator = new DescriptionValidator();
+            var validresult = validator.Validate(Description);
+            if (!validresult.IsValid)
+            {
+                foreach (var error in validresult.Errors)
+                {
+                    var firsterror = validresult.Errors.First().ErrorMessage;
+                    return BadRequest(new { Message = firsterror });
+                }
+            }
             string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result= await _changeUserDataService.ChangeDescriptionAsync(Id, Description);
             if (result.Success)
