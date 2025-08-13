@@ -4,8 +4,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+ENV ASPNETCORE_URLS=http://192.168.0.103:5001
+EXPOSE 5001
 
 
 # Этот этап используется для сборки проекта службы

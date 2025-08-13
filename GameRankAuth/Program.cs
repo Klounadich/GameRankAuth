@@ -73,6 +73,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.AllowedForNewUsers = true;
 });
 // -------------------------------------------------------------------------------------------------------------
+builder.WebHost.UseUrls("http://192.168.0.103:5001");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
