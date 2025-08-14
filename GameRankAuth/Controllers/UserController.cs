@@ -247,5 +247,12 @@ namespace GameRankAuth.Controllers
 
             return Ok(new { RedirectUrl = "/Profile.html" });
         }
+
+        [HttpPost("set-avatar")]
+        [Authorize]
+        public async Task<IActionResult> SetAvatar(IFormFile file)
+        {
+            return Ok(new { Message = "<UNK> <UNK> <UNK>" });
+        }
     }
 }
