@@ -28,6 +28,7 @@ builder.Services.AddScoped<JWTTokenService>();
 builder.Services.AddScoped<IChangeUserDataService, ChangeUserDataService>();
 builder.Services.AddScoped<IVerifyService, VerifyEmailService>();
 builder.Services.AddScoped<RabbitMQService>();
+builder.Services.AddScoped<IAvatarService, AvatarService>();
 builder.Services.AddAuth(builder.Configuration);
 var jwtSection = builder.Configuration.GetSection("jwt");
 var authSettings = builder.Configuration.GetSection("jwt").Get<AuthSettings>();
@@ -73,7 +74,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.AllowedForNewUsers = true;
 });
 // -------------------------------------------------------------------------------------------------------------
-//builder.WebHost.UseUrls("http://192.168.0.103:5001");
+builder.WebHost.UseUrls("http://192.168.0.103:5001");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -8,14 +8,14 @@ public class AvatarService : IAvatarService
     {
         var keyId = "003cafa7b13f5090000000001";
         var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
-        var bucketId = "GameRankAvatars";
+        var bucketId = "3cfafffa072ba1239f850019";
         var b2Service = new B2Service(keyId, applicationKey, bucketId);
         await using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
         var fileBytes = stream.ToArray();
-        Console.WriteLine("Перевели в байты");
-        Console.WriteLine(fileBytes.Length);
-        var uploadFile = await b2Service.UploadFileAsync(fileData:fileBytes, fileName:file.FileName , contentType:file.ContentType);
-        Console.WriteLine("Закинули в боб");
+        
+        
+         await b2Service.UploadFileAsync(fileData:fileBytes, fileName:file.FileName , contentType:file.ContentType);
+        
     }
 }

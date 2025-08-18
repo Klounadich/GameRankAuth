@@ -256,9 +256,9 @@ namespace GameRankAuth.Controllers
         {
             try
             {
-                Console.WriteLine("Закинули в загрузку");
+                
                 await _avatarService.UploadAvatar(file);
-                return Ok(new { Message = "<UNK> <UNK> <UNK200>" });
+                return Ok(new { Message = "Аватар успешно изменён" });
             }
             catch (Exception ex)
             {
