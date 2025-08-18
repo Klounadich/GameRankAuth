@@ -2,5 +2,5 @@ namespace GameRankAuth.Interfaces;
 
 public interface IAvatarService
 {
-    Task UploadAvatar(IFormFile file);
+    Task UploadAvatar(IFormFile file , string Id);
 }

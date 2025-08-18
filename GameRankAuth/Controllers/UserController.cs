@@ -256,8 +256,8 @@ namespace GameRankAuth.Controllers
         {
             try
             {
-                
-                await _avatarService.UploadAvatar(file);
+                var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                await _avatarService.UploadAvatar(file , getUserId);
                 return Ok(new { Message = "Аватар успешно изменён" });
             }
             catch (Exception ex)
