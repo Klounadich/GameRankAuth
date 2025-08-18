@@ -14,7 +14,7 @@ public class B2Service
     {
         _client = new B2Client(keyId, applicationKey);
         Console.WriteLine($"KeyId: {keyId}");
-        Console.WriteLine($"ApplicationKey: {applicationKey?.Substring(0, 5)}..."); // Не выводите полный ключ в лог!
+        Console.WriteLine($"ApplicationKey: {applicationKey?.Substring(0, 5)}..."); 
         Console.WriteLine($"BucketId: {bucketId}");
         _bucketId = bucketId;
     }
@@ -28,6 +28,7 @@ public class B2Service
         var uploadUrl = await _client.Files.GetUploadUrl(_bucketId);
         Console.WriteLine($"{fileName} /// {uploadUrl} //// {contentType} ////");
         
+        
          await _client.Files.Upload(
             fileData: fileData,
             fileName: fileName,
@@ -37,7 +38,34 @@ public class B2Service
             autoRetry: autoRetry);
          
     }
+    
+    public async Task<string> GenerateAvatarUrlAsync(string filePath, string bucketName, TimeSpan? expiry = null)
+    {
+        try
+        {
+            var keyId = "003cafa7b13f5090000000001";
+            var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+        
+            
+            var authInfo = await B2Client.AuthorizeAsync(keyId, applicationKey);
+        
+            var baseDownloadUrl = authInfo.DownloadUrl;
 
+          
+            var downloadAuth = await _client.Files.GetDownloadAuthorization(
+                fileNamePrefix: filePath,
+                validDurationInSeconds: (int)(expiry?.TotalSeconds ?? 3600),
+                bucketId: bucketName);
+
+           
+            return $"{baseDownloadUrl}/file/{bucketName}/{Uri.EscapeDataString(filePath)}?Authorization={downloadAuth.AuthorizationToken}";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при генерации URL: {ex.Message}");
+            throw;
+        }
+    }
     
    
 

@@ -16,16 +16,26 @@ public class AvatarService : IAvatarService
         await using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
         var fileBytes = stream.ToArray();
-        var getLink = "testtes";
+        var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
         
-         await b2Service.UploadFileAsync(fileData:fileBytes, fileName:file.FileName , contentType:file.ContentType);
+       
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        if (!allowedExtensions.Contains(fileExtension))
+        {
+            throw new ArgumentException("Недопустимый формат файла");
+        }
+
+       
+        var fileName = $"avatars/{Id}_{Guid.NewGuid()}{fileExtension}";
+        var fileUrl = await b2Service.GenerateAvatarUrlAsync(fileName, bucketId);
+         await b2Service.UploadFileAsync(fileData:fileBytes, fileName:fileName , contentType:file.ContentType);
         var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
         var database = client.GetDatabase("admin");
         var collection = database.GetCollection<Avatar>("avatars");
         var addAvatar = new Avatar
         {
             Id = Id,
-            Link = getLink
+            Link = fileUrl,
         };
 
     }
