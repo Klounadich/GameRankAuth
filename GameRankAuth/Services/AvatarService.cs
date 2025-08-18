@@ -30,13 +30,16 @@ public class AvatarService : IAvatarService
         var fileUrl = await b2Service.GenerateAvatarUrlAsync(fileName, bucketId);
          await b2Service.UploadFileAsync(fileData:fileBytes, fileName:fileName , contentType:file.ContentType);
         var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
-        var database = client.GetDatabase("admin");
+        var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
         var addAvatar = new Avatar
         {
             Id = Id,
             Link = fileUrl,
         };
+        Console.WriteLine($"отправляем: {fileUrl}");
+        collection.InsertOne(addAvatar);
+        Console.WriteLine("отправляено");
 
     }
 }

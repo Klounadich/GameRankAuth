@@ -631,3 +631,9 @@ C:/Users/Ярослав/my pets/GameRankAuth/GameRankAuth/bin/Debug/net8.0/Syste
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets.build.json.cache
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets.build.endpoints.json
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/GameRank.A3535497.Up2Date
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/DnsClient.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/MongoDB.Bson.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/MongoDB.Driver.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/SharpCompress.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/Snappier.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/ZstdSharp.dll

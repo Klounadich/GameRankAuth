@@ -58,7 +58,7 @@ public class B2Service
                 bucketId: bucketName);
 
            
-            return $"{baseDownloadUrl}/file/{bucketName}/{Uri.EscapeDataString(filePath)}?Authorization={downloadAuth.AuthorizationToken}";
+            return $"{baseDownloadUrl}/file/GameRankAvatars/{Uri.EscapeDataString(filePath)}?Authorization={downloadAuth.AuthorizationToken}";
         }
         catch (Exception ex)
         {
