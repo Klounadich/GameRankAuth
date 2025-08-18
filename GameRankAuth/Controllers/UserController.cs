@@ -22,12 +22,14 @@ namespace GameRankAuth.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<AuthController> _logger;
         private readonly IChangeUserDataService _changeUserDataService;
+        private readonly IAvatarService _avatarService;
         private const string JWTToken = "myToken";
 
         public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, ILogger<AuthController> logger,
-            IChangeUserDataService changeUserDataService)
+            IChangeUserDataService changeUserDataService, IAvatarService avatarService)
         {
+            _avatarService = avatarService;
             _changeUserDataService = changeUserDataService;
             _context = context;
             _userManager = userManager;
@@ -252,7 +254,17 @@ namespace GameRankAuth.Controllers
         [Authorize]
         public async Task<IActionResult> SetAvatar(IFormFile file)
         {
-            return Ok(new { Message = "<UNK> <UNK> <UNK>" });
+            try
+            {
+                Console.WriteLine("Закинули в загрузку");
+                await _avatarService.UploadAvatar(file);
+                return Ok(new { Message = "<UNK> <UNK> <UNK200>" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new { Message = "<UNK> <UNK> <UNK400>" });
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ public class B2Service
 {
     private readonly B2Client _client;
     private readonly string _bucketId;
-
+    
     public B2Service(string keyId, string applicationKey, string bucketId)
     {
         _client = new B2Client(keyId, applicationKey);
@@ -18,6 +18,8 @@ public class B2Service
     
     public async Task<B2File> UploadFileAsync(byte[] fileData, string fileName, Dictionary<string, string> fileInfo = null, string contentType = "b2/x-auto", bool autoRetry = true)
     {
+        
+        Console.WriteLine(" боб принял");
         var uploadUrl = await _client.Files.GetUploadUrl(_bucketId);
         
         return await _client.Files.Upload(
