@@ -56,6 +56,13 @@ public class AvatarService : IAvatarService
         var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);
         var projection = Builders<BsonDocument>.Projection.Include("Link").Exclude("_id");
         var avatarLink = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
+        if (avatarLink == null || string.IsNullOrEmpty(avatarLink.Link))
+        {
+            // Возвращаем дефолтный аватар или 404
+            return new FileStreamResult(
+                System.IO.File.OpenRead("wwwroot/images/default-avatar.png"), 
+                "image/png");
+        }
         Console.WriteLine($"ссылка на аву: {avatarLink.Link}");
         var contentType = avatarLink.Link.EndsWith(".png") ? "image/png" : 
             avatarLink.Link.EndsWith(".jpg") ? "image/jpeg" : 
