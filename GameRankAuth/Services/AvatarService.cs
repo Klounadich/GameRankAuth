@@ -40,8 +40,8 @@ public class AvatarService : IAvatarService
             
             try
             {
-                
-                //await b2Service.DeleteFileAsync(existingAvatar.Link,);
+                await b2Service.DeleteFileAsync(null, existingAvatar.Link);
+               
             }
             catch (Exception ex)
             {
