@@ -182,7 +182,16 @@ namespace GameRankAuth.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var avatar = await _avatarService.LoadAvatar(userId);
-            return avatar; 
+            if (avatar is FileStreamResult fileStreamResult)
+            {
+                return File(
+                    fileStreamResult.FileStream,
+                    fileStreamResult.ContentType,
+                    enableRangeProcessing: true
+                );
+            }
+
+            return BadRequest();
         }
         [HttpGet("usershow")]
         [Authorize]

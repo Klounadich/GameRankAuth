@@ -8,7 +8,7 @@ namespace GameRankAuth.Services;
 
 public class AvatarService : IAvatarService
 {
-    public async Task UploadAvatar(IFormFile file , string Id)
+    public async Task UploadAvatar(IFormFile file, string Id)
     {
         var keyId = "003cafa7b13f5090000000001";
         var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
@@ -18,30 +18,54 @@ public class AvatarService : IAvatarService
         await file.CopyToAsync(stream);
         var fileBytes = stream.ToArray();
         var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-        
-       
+
+
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
         if (!allowedExtensions.Contains(fileExtension))
         {
             throw new ArgumentException("Недопустимый формат файла");
         }
 
-       
+
         var fileName = $"avatars/{Id}_{Guid.NewGuid()}{fileExtension}";
-        
-         await b2Service.UploadFileAsync(fileData:fileBytes, fileName:fileName , contentType:file.ContentType);
+
+        await b2Service.UploadFileAsync(fileData: fileBytes, fileName: fileName, contentType: file.ContentType);
         var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
-        var addAvatar = new Avatar
-        {
-            Id = Id,
-            Link = fileName,
-        };
-        Console.WriteLine($"отправляем: {fileName}");
-        collection.InsertOne(addAvatar);
-        Console.WriteLine("отправляено");
+        var existingAvatar = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
 
+        if (existingAvatar != null)
+        {
+            
+            try
+            {
+                
+                //await b2Service.DeleteFileAsync(existingAvatar.Link,);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при удалении старого файла: {ex.Message}");
+                
+            }
+
+            
+            var update = Builders<Avatar>.Update.Set(a => a.Link, fileName);
+            await collection.UpdateOneAsync(a => a.Id == Id, update);
+            Console.WriteLine($"Обновлен аватар для пользователя {Id}: {fileName}");
+        }
+        else
+        {
+            var addAvatar = new Avatar
+            {
+                Id = Id,
+                Link = fileName,
+            };
+            Console.WriteLine($"отправляем: {fileName}");
+            collection.InsertOne(addAvatar);
+            Console.WriteLine("отправляено");
+
+        }
     }
 
     public async Task<FileStreamResult> LoadAvatar(string Id)
