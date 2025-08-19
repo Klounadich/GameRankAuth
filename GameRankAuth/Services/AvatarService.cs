@@ -58,10 +58,10 @@ public class AvatarService : IAvatarService
         var avatarLink = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
         if (avatarLink == null || string.IsNullOrEmpty(avatarLink.Link))
         {
-            // Возвращаем дефолтный аватар или 404
-            return new FileStreamResult(
-                System.IO.File.OpenRead("wwwroot/images/default-avatar.png"), 
-                "image/png");
+            const string defaultAvatarPath = "avatars/default-avatar.jpg";
+            var stream1 = await b2Service.GetAvatarStreamAsync(defaultAvatarPath);
+            return new FileStreamResult(stream1, "image/jpg");
+            
         }
         Console.WriteLine($"ссылка на аву: {avatarLink.Link}");
         var contentType = avatarLink.Link.EndsWith(".png") ? "image/png" : 
