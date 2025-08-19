@@ -198,6 +198,19 @@ namespace GameRankAuth.Controllers
             var userForRole = await _userManager.FindByIdAsync(getUserId);
             var role =  await _userManager.GetRolesAsync(userForRole);
             var avatar = await _avatarService.LoadAvatar(getUserId);
+            if (avatar == null)
+            {
+                return Ok(new
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Role = role,
+                    EmailVerified = user.EmailConfirmed,
+                    Description = Description,
+                    
+
+                });
+            }
 
             if (user == null && role == null)
             {
