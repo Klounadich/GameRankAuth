@@ -196,7 +196,8 @@ namespace GameRankAuth.Controllers
             var Description = _context.UsersDescription.Where(x => x.Id == getUserId).Select(x => x.Description).FirstOrDefault();
 
             var userForRole = await _userManager.FindByIdAsync(getUserId);
-            var role =  await _userManager.GetRolesAsync(userForRole);  
+            var role =  await _userManager.GetRolesAsync(userForRole);
+            var avatar = await _avatarService.LoadAvatar(getUserId);
 
             if (user == null && role == null)
             {
@@ -211,7 +212,8 @@ namespace GameRankAuth.Controllers
                     Email = user.Email,
                     Role = role,
                     EmailVerified = user.EmailConfirmed,
-                    Description = Description
+                    Description = Description,
+                    Avatar = avatar
 
                 });
             }
@@ -266,5 +268,7 @@ namespace GameRankAuth.Controllers
                 return BadRequest(new { Message = "<UNK> <UNK> <UNK400>" });
             }
         }
+        
+        
     }
 }

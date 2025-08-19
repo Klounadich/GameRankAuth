@@ -2,6 +2,7 @@ using GameRankAuth.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using GameRankAuth.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameRankAuth.Services;
 
@@ -27,7 +28,7 @@ public class AvatarService : IAvatarService
 
        
         var fileName = $"avatars/{Id}_{Guid.NewGuid()}{fileExtension}";
-        var fileUrl = await b2Service.GenerateAvatarUrlAsync(fileName, bucketId);
+        
          await b2Service.UploadFileAsync(fileData:fileBytes, fileName:fileName , contentType:file.ContentType);
         var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
         var database = client.GetDatabase("test");
@@ -35,11 +36,33 @@ public class AvatarService : IAvatarService
         var addAvatar = new Avatar
         {
             Id = Id,
-            Link = fileUrl,
+            Link = fileName,
         };
-        Console.WriteLine($"отправляем: {fileUrl}");
+        Console.WriteLine($"отправляем: {fileName}");
         collection.InsertOne(addAvatar);
         Console.WriteLine("отправляено");
 
+    }
+
+    public async Task<FileStreamResult> LoadAvatar(string Id)
+    {
+        var keyId = "003cafa7b13f5090000000001";
+        var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+        var bucketId = "3cfafffa072ba1239f850019";
+        var b2Service = new B2Service(keyId, applicationKey, bucketId);
+        var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
+        var database = client.GetDatabase("test");
+        var collection = database.GetCollection<Avatar>("avatars");
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);
+        var projection = Builders<BsonDocument>.Projection.Include("Link").Exclude("_id");
+        var avatarLink = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
+        Console.WriteLine($"ссылка на аву: {avatarLink.Link}");
+        var contentType = avatarLink.Link.EndsWith(".png") ? "image/png" : 
+            avatarLink.Link.EndsWith(".jpg") ? "image/jpeg" : 
+            "image/jpeg";
+        var stream = await b2Service.GetAvatarStreamAsync(avatarLink.Link);
+        
+
+        return new FileStreamResult(stream, contentType);
     }
 }

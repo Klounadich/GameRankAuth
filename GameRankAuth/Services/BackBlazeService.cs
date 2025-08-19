@@ -69,9 +69,10 @@ public class B2Service
     
    
 
-    public async Task<B2File> DownloadFileByIdAsync(string fileId)
+    public async Task<Stream> GetAvatarStreamAsync(string filepath)
     {
-        return await _client.Files.DownloadById(fileId);
+        var file = await _client.Files.DownloadByName(filepath , bucketName:"GameRankAvatars");
+        return new MemoryStream(file.FileData);
     }
 
     public async Task DeleteFileAsync(string fileId, string fileName)
