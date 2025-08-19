@@ -2,6 +2,9 @@ using B2Net;
 using B2Net.Models;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -9,7 +12,9 @@ public class B2Service
 {
     private readonly B2Client _client;
     private readonly string _bucketId;
+    private readonly HttpClient _httpClient;
     
+
     public B2Service(string keyId, string applicationKey, string bucketId)
     {
         _client = new B2Client(keyId, applicationKey);
@@ -19,13 +24,57 @@ public class B2Service
         _bucketId = bucketId;
     }
 
-    
+    public async Task<string> GetFileIdByNameAsync(string fileName)
+    {
+        try
+        {
+            // Получаем авторизационные данные через B2Net
+            
+                var keyId = "003cafa7b13f5090000000001";
+                var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+            
+            
+            var authResponse = await B2Client.AuthorizeAsync(keyId, applicationKey);
+            
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{authResponse.ApiUrl}/b2api/v2/b2_list_file_names"),
+                Content = new StringContent(JsonSerializer.Serialize(new
+                {
+                    bucketId = _bucketId,
+                    prefix = fileName,
+                    maxFileCount = 1
+                }), Encoding.UTF8, "application/json")
+            };
+            
+            request.Headers.Add("Authorization", authResponse.AuthorizationToken);
+
+            var response = await _httpClient.SendAsync(request);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<B2ListFilesResponse>(content);
+                return result?.Files?.FirstOrDefault(f => f.FileName == fileName)?.FileId;
+            }
+            
+            Console.WriteLine($"Ошибка при получении fileId: {response.StatusCode}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Исключение в GetFileIdByNameAsync: {ex.Message}");
+            return null;
+        }
+    }
     public async Task UploadFileAsync(byte[] fileData, string fileName, Dictionary<string, string> fileInfo = null, string contentType = "b2/x-auto", bool autoRetry = true)
     {
         
         
         
         var uploadUrl = await _client.Files.GetUploadUrl(_bucketId);
+        
         Console.WriteLine($"{fileName} /// {uploadUrl} //// {contentType} ////");
         
         
@@ -78,5 +127,20 @@ public class B2Service
     public async Task DeleteFileAsync(string fileId, string fileName)
     {
         await _client.Files.Delete(fileId, fileName);
+    }
+    
+    public class B2ListFilesResponse
+    {
+        [JsonPropertyName("files")]
+        public List<B2FileInfo> Files { get; set; }
+    }
+
+    public class B2FileInfo
+    {
+        [JsonPropertyName("fileId")]
+        public string FileId { get; set; }
+    
+        [JsonPropertyName("fileName")]
+        public string FileName { get; set; }
     }
 }
