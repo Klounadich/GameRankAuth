@@ -40,7 +40,9 @@ public class AvatarService : IAvatarService
             
             try
             {
-                await b2Service.DeleteFileAsync(null, existingAvatar.Link);
+                var fileid = await b2Service.GetFileIdByNameAsync(existingAvatar.Link);
+                Console.WriteLine(fileid);
+                await b2Service.DeleteFileAsync(fileid, existingAvatar.Link);
                
             }
             catch (Exception ex)
