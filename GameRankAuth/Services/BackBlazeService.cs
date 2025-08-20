@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using GameRankAuth.Data;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Options;
 
 public class B2Service
 {
+    private readonly B2Settings _settings;
     private readonly B2Client _client;
     private readonly string _bucketId;
     private readonly HttpClient _httpClient;
     
 
-    public B2Service(string keyId, string applicationKey, string bucketId)
+    public B2Service(IOptions<B2Settings> b2Settings)
     {
-        _client = new B2Client(keyId, applicationKey);
-        Console.WriteLine($"KeyId: {keyId}");
-        Console.WriteLine($"ApplicationKey: {applicationKey?.Substring(0, 5)}..."); 
-        Console.WriteLine($"BucketId: {bucketId}");
-        _bucketId = bucketId;
+        _settings = b2Settings.Value;
+        _client = new B2Client(_settings.KeyId,_settings.ApplicationKey);
         _httpClient = new HttpClient();
     }
 
@@ -30,7 +30,7 @@ public class B2Service
         try
         {
             
-            var files = await _client.Files.GetList(fileName, 1, _bucketId);
+            var files = await _client.Files.GetList(fileName, 1, _settings.BucketId);
             
             var file = files.Files.FirstOrDefault(f => f.FileName == fileName);
             return file?.FileId;
@@ -59,9 +59,9 @@ public class B2Service
         
         
         
-        var uploadUrl = await _client.Files.GetUploadUrl(_bucketId);
+        var uploadUrl = await _client.Files.GetUploadUrl(_settings.BucketId);
         
-        Console.WriteLine($"{fileName} /// {uploadUrl} //// {contentType} ////");
+        
         
         
          await _client.Files.Upload(
@@ -78,11 +78,10 @@ public class B2Service
     {
         try
         {
-            var keyId = "003cafa7b13f5090000000001";
-            var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+            
         
             
-            var authInfo = await B2Client.AuthorizeAsync(keyId, applicationKey);
+            var authInfo = await B2Client.AuthorizeAsync(_settings.KeyId, _settings.ApplicationKey);
         
             var baseDownloadUrl = authInfo.DownloadUrl;
 
@@ -106,7 +105,7 @@ public class B2Service
 
     public async Task<Stream> GetAvatarStreamAsync(string filepath)
     {
-        var file = await _client.Files.DownloadByName(filepath , bucketName:"GameRankAvatars");
+        var file = await _client.Files.DownloadByName(filepath , bucketName:_settings.BucketName);
         return new MemoryStream(file.FileData);
     }
 

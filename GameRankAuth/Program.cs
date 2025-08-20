@@ -6,6 +6,7 @@ using GameRankAuth.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using GameRankAuth.Models;
+
 using AutoMapper;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services.RabbitMQ;
@@ -13,7 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.Configure<B2Settings>(
+    builder.Configuration.GetSection("B2Settings"));
 // Конект админки бд 
 builder.Services.AddDbContext<AdminPanelDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AdminDBConnection")));
