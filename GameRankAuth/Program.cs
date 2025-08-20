@@ -12,10 +12,15 @@ using GameRankAuth.Interfaces;
 using GameRankAuth.Services.RabbitMQ;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<B2Settings>(
     builder.Configuration.GetSection("B2Settings"));
+builder.Services.Configure<B2Settings>(builder.Configuration.GetSection("B2Settings"));
+builder.Services.AddSingleton<B2Settings>(sp => 
+    sp.GetRequiredService<IOptions<B2Settings>>().Value);
+builder.Services.AddScoped<IB2Service, B2Service>();
 // Конект админки бд 
 builder.Services.AddDbContext<AdminPanelDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AdminDBConnection")));

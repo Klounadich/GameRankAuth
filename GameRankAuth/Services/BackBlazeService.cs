@@ -7,10 +7,11 @@ using System.Text.Json;
 using GameRankAuth.Data;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using GameRankAuth.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
 
-public class B2Service
+public class B2Service : IB2Service
 {
     private readonly B2Settings _settings;
     private readonly B2Client _client;
