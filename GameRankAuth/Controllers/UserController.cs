@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace GameRankAuth.Controllers
 {
+    [Authorize(Policy = "NotBanned")]
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase

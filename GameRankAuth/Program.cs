@@ -51,7 +51,13 @@ builder.Services.AddCors(options =>
     });
 });
 //  --------------------------------------------------------------------------------
+builder.Services.AddSingleton<IAuthorizationHandler, NotBannedHandler>();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("NotBanned", policy =>
+        policy.Requirements.Add(new NotBannedRequirment()));
+});
 // AutoMapper ------------------------------------------------------------------------------------
 builder.Services.AddAutoMapper(typeof (UserProfile));
 builder.Services.AddScoped<IAuthService ,  AuthService>();

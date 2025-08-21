@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace GameRankAuth.Controllers
 {
+    [Authorize(Policy = "NotBanned")]
     [ApiController]
 
     [Route("api/auth")]
