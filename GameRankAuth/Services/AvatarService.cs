@@ -12,13 +12,13 @@ public class AvatarService : IAvatarService
 {
     private readonly IB2Service _B2Service;
     private readonly B2Settings _settings;
-    private readonly IMongoClient _mongoClient;
+    
 
-    public AvatarService(IMongoClient mongoClient ,  B2Settings settings , IB2Service B2Service)
+    public AvatarService(  B2Settings settings , IB2Service B2Service)
     {
         _B2Service = B2Service;
         _settings = settings;
-        _mongoClient = mongoClient;
+       
     }
     public async Task UploadAvatar(IFormFile file, string Id )
     {
@@ -97,7 +97,7 @@ public class AvatarService : IAvatarService
             return new FileStreamResult(stream1, "image/jpg");
             
         }
-        Console.WriteLine($"ссылка на аву: {avatarLink.Link}");
+        
         var contentType = avatarLink.Link.EndsWith(".png") ? "image/png" : 
             avatarLink.Link.EndsWith(".jpg") ? "image/jpeg" : 
             "image/jpeg";
