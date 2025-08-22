@@ -28,44 +28,28 @@ public class B2Service
     {
         try
         {
-            // Получаем авторизационные данные через B2Net
             
-                var keyId = "003cafa7b13f5090000000001";
-                var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+            var files = await _client.Files.GetList(fileName, 1, _bucketId);
             
-            
-            var authResponse = await B2Client.AuthorizeAsync(keyId, applicationKey);
-            
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri($"{authResponse.ApiUrl}/b2api/v2/b2_list_file_names"),
-                Content = new StringContent(JsonSerializer.Serialize(new
-                {
-                    bucketId = _bucketId,
-                    prefix = fileName,
-                    maxFileCount = 1
-                }), Encoding.UTF8, "application/json")
-            };
-            
-            request.Headers.Add("Authorization", authResponse.AuthorizationToken);
-
-            var response = await _httpClient.SendAsync(request);
-            
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<B2ListFilesResponse>(content);
-                return result?.Files?.FirstOrDefault(f => f.FileName == fileName)?.FileId;
-            }
-            
-            Console.WriteLine($"Ошибка при получении fileId: {response.StatusCode}");
-            return null;
+            var file = files.Files.FirstOrDefault(f => f.FileName == fileName);
+            return file?.FileId;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Исключение в GetFileIdByNameAsync: {ex.Message}");
             return null;
+        }
+    }
+    public async Task<bool> FileExistsAsync(string fileName)
+    {
+        try
+        {
+            var fileId = await GetFileIdByNameAsync(fileName);
+            return !string.IsNullOrEmpty(fileId);
+        }
+        catch
+        {
+            return false;
         }
     }
     public async Task UploadFileAsync(byte[] fileData, string fileName, Dictionary<string, string> fileInfo = null, string contentType = "b2/x-auto", bool autoRetry = true)

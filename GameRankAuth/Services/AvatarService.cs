@@ -41,6 +41,7 @@ public class AvatarService : IAvatarService
             try
             {
                 var fileid = await b2Service.GetFileIdByNameAsync(existingAvatar.Link);
+                
                 await b2Service.DeleteFileAsync(fileid, existingAvatar.Link);
                
             }
