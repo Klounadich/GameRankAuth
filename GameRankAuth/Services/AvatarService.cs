@@ -1,29 +1,19 @@
-using B2Net;
 using GameRankAuth.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using GameRankAuth.Models;
-using GameRankAuth.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameRankAuth.Services;
 
 public class AvatarService : IAvatarService
 {
-    private readonly IB2Service _B2Service;
-    private readonly B2Settings _settings;
-    
-
-    public AvatarService(  B2Settings settings , IB2Service B2Service)
+    public async Task UploadAvatar(IFormFile file, string Id)
     {
-        _B2Service = B2Service;
-        _settings = settings;
-       
-    }
-    public async Task UploadAvatar(IFormFile file, string Id )
-    {
-        
-        
+        var keyId = "003cafa7b13f5090000000001";
+        var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+        var bucketId = "3cfafffa072ba1239f850019";
+        var b2Service = new B2Service(keyId, applicationKey, bucketId);
         await using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
         var fileBytes = stream.ToArray();
@@ -39,8 +29,8 @@ public class AvatarService : IAvatarService
 
         var fileName = $"avatars/{Id}_{Guid.NewGuid()}{fileExtension}";
 
-        await _B2Service.UploadFileAsync(fileData: fileBytes, fileName: fileName, contentType: file.ContentType);
-        var client = new MongoClient("mongodb://localhost:27017"); 
+        await b2Service.UploadFileAsync(fileData: fileBytes, fileName: fileName, contentType: file.ContentType);
+        var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
         var existingAvatar = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
@@ -50,9 +40,7 @@ public class AvatarService : IAvatarService
             
             try
             {
-                var fileid = await _B2Service.GetFileIdByNameAsync(existingAvatar.Link);
-                Console.WriteLine(fileid);
-                await _B2Service.DeleteFileAsync(fileid, existingAvatar.Link);
+                await b2Service.DeleteFileAsync(null, existingAvatar.Link);
                
             }
             catch (Exception ex)
@@ -64,7 +52,7 @@ public class AvatarService : IAvatarService
             
             var update = Builders<Avatar>.Update.Set(a => a.Link, fileName);
             await collection.UpdateOneAsync(a => a.Id == Id, update);
-            
+            Console.WriteLine($"Обновлен аватар для пользователя {Id}: {fileName}");
         }
         else
         {
@@ -73,38 +61,37 @@ public class AvatarService : IAvatarService
                 Id = Id,
                 Link = fileName,
             };
-            
+            Console.WriteLine($"отправляем: {fileName}");
             collection.InsertOne(addAvatar);
-            
+            Console.WriteLine("отправляено");
 
         }
     }
 
     public async Task<FileStreamResult> LoadAvatar(string Id)
     {
-        
-        
-        var client = new MongoClient("mongodb://localhost:27017"); 
+        var keyId = "003cafa7b13f5090000000001";
+        var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
+        var bucketId = "3cfafffa072ba1239f850019";
+        var b2Service = new B2Service(keyId, applicationKey, bucketId);
+        var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
         var database = client.GetDatabase("test");
-        
         var collection = database.GetCollection<Avatar>("avatars");
         var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);
         var projection = Builders<BsonDocument>.Projection.Include("Link").Exclude("_id");
-       
         var avatarLink = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
-        Console.WriteLine(avatarLink);
         if (avatarLink == null || string.IsNullOrEmpty(avatarLink.Link))
         {
             const string defaultAvatarPath = "avatars/default-avatar.jpg";
-            var stream1 = await _B2Service.GetAvatarStreamAsync(defaultAvatarPath);
+            var stream1 = await b2Service.GetAvatarStreamAsync(defaultAvatarPath);
             return new FileStreamResult(stream1, "image/jpg");
             
         }
-        
+        Console.WriteLine($"ссылка на аву: {avatarLink.Link}");
         var contentType = avatarLink.Link.EndsWith(".png") ? "image/png" : 
             avatarLink.Link.EndsWith(".jpg") ? "image/jpeg" : 
             "image/jpeg";
-        var stream = await _B2Service.GetAvatarStreamAsync(avatarLink.Link);
+        var stream = await b2Service.GetAvatarStreamAsync(avatarLink.Link);
         
 
         return new FileStreamResult(stream, contentType);
