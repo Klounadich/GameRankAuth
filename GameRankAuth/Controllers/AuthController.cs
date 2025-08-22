@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace GameRankAuth.Controllers
 {
-    [Authorize(Policy = "NotBanned")]
+    
     [ApiController]
 
     [Route("api/auth")]
@@ -47,7 +47,7 @@ namespace GameRankAuth.Controllers
             _logger = logger;
             
         }
-
+        
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest user)
         {
@@ -114,7 +114,7 @@ namespace GameRankAuth.Controllers
             
         }
 
-
+        
         [HttpPost("verify")]
         [Authorize]
         public async Task<IActionResult> VerifyEmailAsync()
@@ -134,7 +134,7 @@ namespace GameRankAuth.Controllers
                 return Conflict(new { Message = "Ошибка подтверждения почты , попробуйте позже" });
             }
         }
-
+        
         [HttpGet("check-verify")]
         [Authorize]
         public async Task<IActionResult> CheckVerifyEmailAsync()
@@ -143,12 +143,12 @@ namespace GameRankAuth.Controllers
 
 
             var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Console.WriteLine(id);
+            //Console.WriteLine(id);
             var getuser = await _userManager.FindByIdAsync(id);
             if (getuser != null)
             {
                 var emailVerified = await _userManager.IsEmailConfirmedAsync(getuser);
-                Console.WriteLine(emailVerified);
+                //Console.WriteLine(emailVerified);
                 return Ok(new { getStatusEmail = emailVerified });
             }
             return BadRequest(new { Message = "<UNK> <UNK> <UNK>" });
@@ -159,7 +159,7 @@ namespace GameRankAuth.Controllers
 
 
 
-
+        
         [HttpPost("authoriz")]
         [AllowAnonymous]
         public async Task<IActionResult> Authorization([FromBody] LoginRequest user)

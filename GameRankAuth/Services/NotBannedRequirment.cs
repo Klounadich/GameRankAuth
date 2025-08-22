@@ -1,56 +1,93 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using GameRankAuth.Interfaces;
-using GameRankAuth.Data;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using GameRankAuth.Data;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace GameRankAuth.Services;
+namespace GameRankAuth.Middleware;
 
-public class NotBannedRequirment : IAuthorizationRequirement
+public class BanCheckMiddleware
 {
-    
-}
+    private readonly RequestDelegate _next;
+    private readonly IMemoryCache _cache;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-public class NotBannedHandler : AuthorizationHandler<NotBannedRequirment> 
-{
-    private readonly UserManager<IdentityUser> _userService;
-    private readonly AdminPanelDBContext _adminPanelDBContext;
-
-    public NotBannedHandler( UserManager<IdentityUser> userService ,  AdminPanelDBContext adminPanelDBContext)
+    public BanCheckMiddleware(RequestDelegate next, IMemoryCache cache, IServiceScopeFactory serviceScopeFactory)
     {
-        _adminPanelDBContext = adminPanelDBContext;
-        _userService = userService;
+        _next = next;
+        _cache = cache;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
-        NotBannedRequirment requirement)
+    public async Task InvokeAsync(HttpContext context)
+{
+    
+    if (IsStaticFileRequest(context.Request))
     {
-        if (!context.User.Identity.IsAuthenticated)
-        {
-            context.Fail();
-            return;
-        }
-        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        await _next(context);
+        return;
+    }
 
-        if (userId == null)
-        {
-            context.Fail();
-            return;
-        }
-        var user = await _userService.FindByIdAsync(userId);
-        var userstatus = await _adminPanelDBContext.UserDataAdmin.Where(x => x.Id == user.Id).Select(x => x.Status)
-            .FirstOrDefaultAsync();
+    if (context.User?.Identity?.IsAuthenticated != true)
+    {
+        await _next(context);
+        return;
+    }
 
-        if (user != null && userstatus != "banned")
+    var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (string.IsNullOrEmpty(userId))
+    {
+        await _next(context);
+        return;
+    }
+
+    var cacheKey = $"UserBanStatus_{userId}";
+    if (!_cache.TryGetValue(cacheKey, out bool isBanned))
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AdminPanelDBContext>();
+
+        var user = await userManager.FindByIdAsync(userId);
+        if (user != null)
         {
-            context.Succeed(requirement);
+            Console.WriteLine("233");
+            var userStatus = await dbContext.UserDataAdmin
+                .Where(x => x.Id == user.Id)
+                .Select(x => x.Status)
+                .FirstOrDefaultAsync();
+
+            isBanned = userStatus == "banned";
+            _cache.Set(cacheKey, isBanned, TimeSpan.FromMinutes(1));
         }
         else
         {
-            context.Fail();
+            isBanned = false;
         }
-
     }
+
+    if (isBanned)
+    {
+        context.Response.StatusCode = 403;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{\"error\":\"Account banned\"}");
+        return;
+    }
+
+    await _next(context);
+}
+
+private bool IsStaticFileRequest(HttpRequest request)
+{
+    var staticExtensions = new[] 
+    { 
+        ".css", ".js", ".png", ".jpg", ".jpeg", ".gif", ".ico", 
+        ".svg", ".woff", ".woff2", ".ttf", ".eot", ".map" 
+    };
+
+    return staticExtensions.Any(ext => request.Path.Value?.EndsWith(ext) == true) ||
+           request.Path.StartsWithSegments("/_") ||
+           request.Path.StartsWithSegments("/lib/");
+}
 }

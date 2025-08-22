@@ -86,10 +86,13 @@ public class AvatarService : IAvatarService
         
         var client = new MongoClient("mongodb://localhost:27017"); 
         var database = client.GetDatabase("test");
+        
         var collection = database.GetCollection<Avatar>("avatars");
         var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);
         var projection = Builders<BsonDocument>.Projection.Include("Link").Exclude("_id");
+       
         var avatarLink = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
+        Console.WriteLine(avatarLink);
         if (avatarLink == null || string.IsNullOrEmpty(avatarLink.Link))
         {
             const string defaultAvatarPath = "avatars/default-avatar.jpg";

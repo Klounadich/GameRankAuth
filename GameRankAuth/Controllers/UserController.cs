@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace GameRankAuth.Controllers
 {
-    [Authorize(Policy = "NotBanned")]
+    
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase
@@ -37,7 +37,7 @@ namespace GameRankAuth.Controllers
             _signInManager = signInManager;
             _logger = logger;
         }
-
+        
         [HttpPost("change-username")]
         [Authorize]
         public async Task<IActionResult> ChangeUsername([FromBody] string UserName)
@@ -79,7 +79,7 @@ namespace GameRankAuth.Controllers
 
 
         }
-
+        
         [HttpPost("change-password")]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] UserData.ChangePasswordRequest request)
@@ -115,7 +115,7 @@ namespace GameRankAuth.Controllers
             }
         }
 
-
+        
         [HttpPost("change-description")]
         [Authorize]
         public async Task<IActionResult> ChangeDescription([FromBody] string Description)
@@ -139,7 +139,7 @@ namespace GameRankAuth.Controllers
             return BadRequest(new { Message = result.Errors });
         }
 
-
+        
         [HttpPost("change-email")]
         [Authorize]
         public async Task<IActionResult> ChangeEmail([FromBody] string Email)
@@ -176,7 +176,7 @@ namespace GameRankAuth.Controllers
                 return BadRequest(new { Message = result.Errors });
             }
         }
-
+        
         [HttpGet("showavatar")]
         [Authorize]
         public async Task<IActionResult> ShowAvatar()
@@ -194,12 +194,13 @@ namespace GameRankAuth.Controllers
 
             return BadRequest();
         }
+        
         [HttpGet("usershow")]
         [Authorize]
 
         public async Task<IActionResult> ShowProfileData()
         {
-
+            Console.WriteLine("начали");
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var user = await _context.Users.Select(x => new
@@ -222,6 +223,7 @@ namespace GameRankAuth.Controllers
             }
             else
             {
+                _logger.LogInformation("улетают");
                 return Ok(new
                 {
                     UserName = user.UserName,
@@ -235,7 +237,7 @@ namespace GameRankAuth.Controllers
             }
 
         }
-
+        
         [HttpGet("checkaccess")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
         public async Task<IActionResult> DeleteAccount()
@@ -267,7 +269,7 @@ namespace GameRankAuth.Controllers
 
             return Ok(new { RedirectUrl = "/Profile.html" });
         }
-
+        
         [HttpPost("set-avatar")]
         [Authorize]
         public async Task<IActionResult> SetAvatar(IFormFile file)

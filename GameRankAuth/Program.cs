@@ -12,6 +12,7 @@ using GameRankAuth.Interfaces;
 using GameRankAuth.Services.RabbitMQ;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using GameRankAuth.Middleware;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,14 +57,9 @@ builder.Services.AddCors(options =>
     });
 });
 //  --------------------------------------------------------------------------------
-builder.Services.AddSingleton<IAuthorizationHandler, NotBannedHandler>();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("NotBanned", policy =>
-        policy.Requirements.Add(new NotBannedRequirment()));
-});
-// AutoMapper ------------------------------------------------------------------------------------
+builder.Services.AddMemoryCache();
+//-----------------------------------------------------------------------------------
 builder.Services.AddAutoMapper(typeof (UserProfile));
 builder.Services.AddScoped<IAuthService ,  AuthService>();
 // Identity Settings -----------------------------------------------------------------------------------------
@@ -115,6 +111,7 @@ app.UseCors("AllowAll");
 
 
 app.UseAuthentication();
+app.UseMiddleware<BanCheckMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
