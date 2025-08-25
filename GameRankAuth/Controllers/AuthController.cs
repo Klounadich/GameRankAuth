@@ -28,14 +28,16 @@ namespace GameRankAuth.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IVerifyService _verifyService;
         private readonly RabbitMQService _rabbitMQService;
+        private readonly IQrCodeGeneratorService _qrCodGen;
         private readonly AdminPanelDBContext _adminPanelDBContext;
         
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
             ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService ,
-            AdminPanelDBContext adminPanelDBContext)
+            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen)
         {
+            _qrCodGen =  qrCodGen;
             _adminPanelDBContext = adminPanelDBContext;
             _rabbitMQService = rabbitMQService;
             _verifyService = verifyService;
@@ -201,7 +203,15 @@ namespace GameRankAuth.Controllers
 
             
         }
-        
+
+
+        [HttpGet("qrcode-show")]
+        public async Task<IActionResult> QrcodeShow()
+        {
+            var qrcode = await _qrCodGen.GenerateQrCodeImage();
+            
+            return File(qrcode , "image/png");
+        }
         
 
 

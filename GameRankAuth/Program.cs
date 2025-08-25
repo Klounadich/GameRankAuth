@@ -21,6 +21,7 @@ builder.Services.Configure<B2Settings>(
 builder.Services.Configure<B2Settings>(builder.Configuration.GetSection("B2Settings"));
 builder.Services.AddSingleton<B2Settings>(sp => 
     sp.GetRequiredService<IOptions<B2Settings>>().Value);
+builder.Services.AddScoped<IQrCodeGeneratorService, QrCodeGeneratorService>();
 
 // Конект админки бд 
 builder.Services.AddDbContext<AdminPanelDBContext>(options =>
