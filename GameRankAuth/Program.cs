@@ -107,7 +107,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseRouting();
 app.UseCors("AllowAll");
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 
 
