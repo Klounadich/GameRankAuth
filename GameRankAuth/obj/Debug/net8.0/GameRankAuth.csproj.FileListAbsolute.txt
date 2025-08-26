@@ -637,6 +637,9 @@ C:/Users/Ярослав/my pets/GameRankAuth/GameRankAuth/bin/Debug/net8.0/Snapp
 C:/Users/Ярослав/my pets/GameRankAuth/GameRankAuth/bin/Debug/net8.0/ZstdSharp.dll
 C:/Users/Ярослав/my pets/GameRankAuth/GameRankAuth/bin/Debug/net8.0/QRCoder.dll
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/QRCoder.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/Pipelines.Sockets.Unofficial.dll
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/StackExchange.Redis.dll
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/GameRankAuth.staticwebassets.endpoints.json
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/rpswa.dswa.cache.json
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/rjimswa.dswa.cache.json

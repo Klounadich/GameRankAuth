@@ -10,6 +10,8 @@ using StackExchange.Redis;
 using AutoMapper;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services.RabbitMQ;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using GameRankAuth.Middleware;
@@ -24,6 +26,7 @@ builder.Services.AddSingleton<B2Settings>(sp =>
 builder.Services.AddScoped<IQrCodeGeneratorService, QrCodeGeneratorService>();
 
 //Redis ------------------------------------------------------
+builder.Services.AddScoped<IDistributedCache, RedisCache>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse("localhost:6379");

@@ -1,5 +1,6 @@
 using GameRankAuth.Interfaces;
 using QRCoder;
+using GameRankAuth.Models;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -11,10 +12,12 @@ public class QrCodeGeneratorService : IQrCodeGeneratorService
 {
     private readonly IDatabase _redis;
     private const int ExpireSession = 5;
+    private QrGenerationResult _lastResult;
 
     public QrCodeGeneratorService(IConnectionMultiplexer redis)
     {
         _redis = redis.GetDatabase();
+        
     }
 
     private async Task SaveSessionAsync(string qrcodeId, string token, DateTime expire)
@@ -34,7 +37,7 @@ public class QrCodeGeneratorService : IQrCodeGeneratorService
         Console.WriteLine("Начали Закинули в редис");
     }
     
-    public async Task<byte[]> GenerateQrCodeImage()
+    public async Task<QrGenerationResult> GenerateQrCodeImage()
     {
         string endpointLink = "http://192.168.0.103:5001/api/auth/qr-code-check";
         Guid qrcodeId = Guid.NewGuid();
@@ -52,6 +55,18 @@ public class QrCodeGeneratorService : IQrCodeGeneratorService
         var Data = QrcodeGen.CreateQrCode( link, QRCodeGenerator.ECCLevel.Q);
         var QrCode = new PngByteQRCode(Data);
         byte [] qrcodeimage = QrCode.GetGraphic(20);
-        return qrcodeimage;
+        _lastResult = new QrGenerationResult
+        {
+            ImageData = qrcodeimage,
+            QrId = qrcodeId.ToString(),
+            Token = secretToken,
+            ExpiresAt = expires
+        };
+        return _lastResult;
+    }
+    
+    public string GetLastGeneratedQrId()
+    {
+        return _lastResult?.QrId;
     }
 }

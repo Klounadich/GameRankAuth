@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
+using StackExchange.Redis;
 using GameRankAuth.Services.RabbitMQ;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Distributed;
@@ -32,15 +33,16 @@ namespace GameRankAuth.Controllers
         private readonly RabbitMQService _rabbitMQService;
         private readonly IQrCodeGeneratorService _qrCodGen;
         private readonly AdminPanelDBContext _adminPanelDBContext;
-        private readonly IDistributedCache _distributedCache;
+        
+        private readonly IDatabase _redis;
         
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
             ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService ,
-            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen , IDistributedCache distributedCache)
+            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen , IConnectionMultiplexer redis)
         {
-            _distributedCache = distributedCache;
+            _redis = redis.GetDatabase();
             _qrCodGen =  qrCodGen;
             _adminPanelDBContext = adminPanelDBContext;
             _rabbitMQService = rabbitMQService;
@@ -212,9 +214,36 @@ namespace GameRankAuth.Controllers
         [HttpGet("qrcode-show")]
         public async Task<IActionResult> QrcodeShow()
         {
-            var qrcode = await _qrCodGen.GenerateQrCodeImage();
-            
-            return File(qrcode , "image/png");
+            try
+            {
+                
+                var qrResult = await _qrCodGen.GenerateQrCodeImage();
+        
+                
+                var base64Image = Convert.ToBase64String(qrResult.ImageData);
+                var imageSrc = $"data:image/png;base64,{base64Image}";
+
+                return Ok(new 
+                {
+                    success = true,
+                    qrId = qrResult.QrId, 
+                    token = qrResult.Token, 
+                    qrCodeImage = imageSrc,
+                    expiresAt = qrResult.ExpiresAt, 
+                    expiresIn = 300 
+                });
+            }
+            catch (Exception ex)
+            {
+               
+                _logger.LogError(ex, "Ошибка генерации QR-кода");
+        
+                return StatusCode(500, new 
+                { 
+                    success = false, 
+                    error = "Ошибка генерации QR-кода" 
+                });
+            }
         }
 
 
@@ -228,7 +257,7 @@ namespace GameRankAuth.Controllers
                 return Unauthorized();
             }
             var cacheKey = $"qr:{request.QrcodeId}";
-            var session = await _distributedCache.GetStringAsync(cacheKey);
+            var session = await _redis.StringGetAsync(cacheKey);
             if (string.IsNullOrEmpty(session))
             {
                 return Ok(new { Message = "Qr-Код недействителен , попробуйте снва" });
@@ -246,13 +275,41 @@ namespace GameRankAuth.Controllers
             sessiondes.Email = User.FindFirstValue(ClaimTypes.Email);
             sessiondes.Role = User.FindFirstValue(ClaimTypes.Role);
             var updatesession = JsonSerializer.Serialize<SessionQr>(sessiondes);
-            await _distributedCache.SetStringAsync(cacheKey, updatesession , new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
-            });
+            var expiry = TimeSpan.FromMinutes(5);
+            await _redis.StringSetAsync(cacheKey, updatesession, expiry);
             return Ok(new { Message = "Qr-код Подтверждён" });
         }
         
+        [HttpGet("qr-status/{qrcodeId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckQrStatus(string qrcodeId)
+        { Console.WriteLine("начали автор");
+            var cacheKey = $"qr:{qrcodeId}";
+        
+            
+            var session = await _redis.StringGetAsync(cacheKey);
+        
+            if (session.IsNullOrEmpty)
+            {
+                return Ok(new { status = "expired" });
+            }
+
+            var sessionData = JsonSerializer.Deserialize<SessionQr>(session!);
+
+            if (sessionData.Status == "confirmed")
+            {
+                var UserName = sessionData.username;
+                var user =  await _userManager.FindByNameAsync(UserName);
+                var token =  _jwtTokenService.GenerateToken(user);
+                if (token != null)
+                {
+                    HttpContext.Response.SetCookie(token);
+                    return Ok(new { Message = "Успешная авторизация" });
+                }
+            }
+
+            return Ok(new { status = sessionData.Status });
+        }
 
 
     }

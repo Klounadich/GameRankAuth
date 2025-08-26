@@ -17,3 +17,11 @@ public class SessionQr
     public string Status { get; set; }
     public string Role { get; set; }
 }
+
+public class QrGenerationResult
+{
+    public byte[] ImageData { get; set; }
+    public string QrId { get; set; }
+    public string Token { get; set; }
+    public DateTime ExpiresAt { get; set; }
+}

@@ -1,6 +1,9 @@
+using GameRankAuth.Models;
+
 namespace GameRankAuth.Interfaces;
 
 public interface IQrCodeGeneratorService
 {
-    Task<byte[]>  GenerateQrCodeImage();
+    string GetLastGeneratedQrId();
+    Task<QrGenerationResult>  GenerateQrCodeImage();
 }
