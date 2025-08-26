@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 using GameRankAuth.Services.RabbitMQ;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace GameRankAuth.Controllers
 {
@@ -30,13 +32,15 @@ namespace GameRankAuth.Controllers
         private readonly RabbitMQService _rabbitMQService;
         private readonly IQrCodeGeneratorService _qrCodGen;
         private readonly AdminPanelDBContext _adminPanelDBContext;
+        private readonly IDistributedCache _distributedCache;
         
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
             ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService ,
-            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen)
+            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen , IDistributedCache distributedCache)
         {
+            _distributedCache = distributedCache;
             _qrCodGen =  qrCodGen;
             _adminPanelDBContext = adminPanelDBContext;
             _rabbitMQService = rabbitMQService;
@@ -223,8 +227,30 @@ namespace GameRankAuth.Controllers
             {
                 return Unauthorized();
             }
-            Console.WriteLine("Начали конфирм");
-            return Ok();
+            var cacheKey = $"qr:{request.QrcodeId}";
+            var session = await _distributedCache.GetStringAsync(cacheKey);
+            if (string.IsNullOrEmpty(session))
+            {
+                return Ok(new { Message = "Qr-Код недействителен , попробуйте снва" });
+            }
+
+            var sessiondes = JsonSerializer.Deserialize<SessionQr>(session);
+
+            if (sessiondes.token != request.token)
+            {
+                return BadRequest(new { Message = "Данные не соответствуют" });
+            }
+            sessiondes.Status = "confirmed";
+            sessiondes.userid = userId;
+            sessiondes.username = User.FindFirstValue(ClaimTypes.Name);
+            sessiondes.Email = User.FindFirstValue(ClaimTypes.Email);
+            sessiondes.Role = User.FindFirstValue(ClaimTypes.Role);
+            var updatesession = JsonSerializer.Serialize<SessionQr>(sessiondes);
+            await _distributedCache.SetStringAsync(cacheKey, updatesession , new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
+            });
+            return Ok(new { Message = "Qr-код Подтверждён" });
         }
         
 
