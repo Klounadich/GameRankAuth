@@ -212,6 +212,20 @@ namespace GameRankAuth.Controllers
             
             return File(qrcode , "image/png");
         }
+
+
+        [HttpPost("qrcode-confirm")]
+        [Authorize]
+        public async Task<IActionResult> QrcodeConfirm([FromBody]QRModel request)
+        {
+            var userId =  User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            Console.WriteLine("Начали конфирм");
+            return Ok();
+        }
         
 
 

@@ -6,7 +6,7 @@ using GameRankAuth.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using GameRankAuth.Models;
-
+using StackExchange.Redis;
 using AutoMapper;
 using GameRankAuth.Interfaces;
 using GameRankAuth.Services.RabbitMQ;
@@ -22,6 +22,17 @@ builder.Services.Configure<B2Settings>(builder.Configuration.GetSection("B2Setti
 builder.Services.AddSingleton<B2Settings>(sp => 
     sp.GetRequiredService<IOptions<B2Settings>>().Value);
 builder.Services.AddScoped<IQrCodeGeneratorService, QrCodeGeneratorService>();
+
+//Redis ------------------------------------------------------
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse("localhost:6379");
+    configuration.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
+
+//------------------------------------------------------------
 
 // Конект админки бд 
 builder.Services.AddDbContext<AdminPanelDBContext>(options =>
