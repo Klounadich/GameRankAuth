@@ -155,6 +155,46 @@ public class ChangeUserDataService: IChangeUserDataService
         }
     }
 
+    public async Task<UserData.UserResult> ChangeSocialLinksAsync(string userId, UserData.SocialLinks request)
+    {
+        var check = await _context.UsersSocialLinks.FindAsync(userId);
+        if (check == null)
+        {
+            var addLinks = new UserData.SocialLinks
+            {
+                Id = userId,
+                GithubLink = request.GithubLink,
+                SteamLink = request.SteamLink,
+                RedditLink = request.RedditLink,
+            };
+            _context.UsersSocialLinks.Add(addLinks);
+            await _context.SaveChangesAsync();
+            return new UserData.UserResult
+            {
+                Success = true,
+            };
+        }
+        else
+        {
+            if (request.GithubLink != null)
+            check.GithubLink = request.GithubLink;
+            
+            if (request.SteamLink != null)
+                check.SteamLink = request.SteamLink;
+            
+            if (request.RedditLink != null)
+                check.RedditLink = request.RedditLink;
+        
+            _context.UsersSocialLinks.Update(check);
+            await _context.SaveChangesAsync();
+        
+            return new UserData.UserResult
+            {
+                Success = true,
+            };
+        }
+    }
+
     public async Task<UserData.UserResult> DeleteAsync(string Id)
     {
         if (string.IsNullOrEmpty(Id))

@@ -13,6 +13,14 @@ public class UserData
         public string NewPassword { get; set; }
     }
 
+    public class SocialLinks
+    {
+        public string Id { get; set; }
+        public string SteamLink { get; set; }
+        public string GithubLink { get; set; }
+        public string RedditLink { get; set; } 
+    }
+
     public class ChangeEmail
     {
         public string Email { get; set; }

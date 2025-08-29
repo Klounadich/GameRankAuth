@@ -10,6 +10,7 @@ namespace GameRankAuth.Data
         {
         }
         public DbSet<UserData.UserDescription> UsersDescription { get; set; }
+        public DbSet<UserData.SocialLinks> UsersSocialLinks { get; set; }
 
         
     }

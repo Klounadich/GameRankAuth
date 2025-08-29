@@ -115,6 +115,19 @@ namespace GameRankAuth.Controllers
             }
         }
 
+        [HttpPost("change-sociallinks")]
+        [Authorize]
+        public async Task<IActionResult> ChangeSocialLinks([FromBody] UserData.SocialLinks request)
+        {
+            string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _changeUserDataService.ChangeSocialLinksAsync(Id, request);
+            if (result.Success)
+            {
+                return Ok(new { Message = "Список соц сетей успешно обновлён" });
+            }
+            return BadRequest(new { Message = result.Errors });
+        }
+
         
         [HttpPost("change-description")]
         [Authorize]
@@ -212,7 +225,7 @@ namespace GameRankAuth.Controllers
                 x.EmailConfirmed
             }).FirstOrDefaultAsync(x => x.Id == getUserId);
             var Description = _context.UsersDescription.Where(x => x.Id == getUserId).Select(x => x.Description).FirstOrDefault();
-
+            var SocialLinks = _context.UsersSocialLinks.Where((X => X.Id == getUserId)).ToList();
             var userForRole = await _userManager.FindByIdAsync(getUserId);
             var role =  await _userManager.GetRolesAsync(userForRole);
 
@@ -231,6 +244,7 @@ namespace GameRankAuth.Controllers
                     Role = role,
                     EmailVerified = user.EmailConfirmed,
                     Description = Description,
+                    SocialLinks = SocialLinks,
                     
 
                 });
