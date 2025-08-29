@@ -155,7 +155,7 @@ public class ChangeUserDataService: IChangeUserDataService
         }
     }
 
-    public async Task<UserData.UserResult> ChangeSocialLinksAsync(string userId, UserData.SocialLinks request)
+    public async Task<UserData.UserResult> ChangeSocialLinksAsync(string userId, UserData.SocialLinksReq request)
     {
         var check = await _context.UsersSocialLinks.FindAsync(userId);
         if (check == null)

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AqaaGxnHEWk=",
+  "dgSpecHash": "5eFBUTy+xsU=",
   "success": true,
-  "projectFilePath": "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
+  "projectFilePath": "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
   "expectedPackageFiles": [
     "/home/klounadich/.nuget/packages/automapper/15.0.0/automapper.15.0.0.nupkg.sha512",
     "/home/klounadich/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
@@ -180,9 +180,9 @@
       "code": "NU1608",
       "level": "Warning",
       "message": "Detected package version outside of dependency constraint: AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 requires AutoMapper (= 12.0.1) but version AutoMapper 15.0.0 was resolved.",
-      "projectPath": "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
+      "projectPath": "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
       "warningLevel": 1,
-      "filePath": "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
+      "filePath": "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
       "libraryId": "AutoMapper",
       "targetGraphs": [
         "net8.0"

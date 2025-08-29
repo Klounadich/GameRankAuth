@@ -117,8 +117,9 @@ namespace GameRankAuth.Controllers
 
         [HttpPost("change-sociallinks")]
         [Authorize]
-        public async Task<IActionResult> ChangeSocialLinks([FromBody] UserData.SocialLinks request)
+        public async Task<IActionResult> ChangeSocialLinks([FromBody] UserData.SocialLinksReq request)
         {
+            Console.WriteLine($"{request.GithubLink}11111111111111111");
             string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _changeUserDataService.ChangeSocialLinksAsync(Id, request);
             if (result.Success)

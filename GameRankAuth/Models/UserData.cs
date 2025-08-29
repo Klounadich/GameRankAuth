@@ -20,6 +20,14 @@ public class UserData
         public string GithubLink { get; set; }
         public string RedditLink { get; set; } 
     }
+    public class SocialLinksReq
+    {
+        
+        public string SteamLink { get; set; }
+        public string GithubLink { get; set; }
+        
+        public string RedditLink { get; set; } 
+    }
 
     public class ChangeEmail
     {
