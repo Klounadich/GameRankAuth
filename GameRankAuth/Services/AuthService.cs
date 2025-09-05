@@ -29,8 +29,11 @@ namespace GameRankAuth.Services
          {
              if (!String.IsNullOrEmpty(request.UserName)&& !String.IsNullOrEmpty(request.Password) &&!String.IsNullOrEmpty(request.Email))
              {
-                 var SameUser = await _context.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email);
-                 if (SameUser != false)
+                 var SameUser = await _context.Users
+                     .Where(u => u.UserName == request.UserName || u.Email == request.Email)
+                     .Select(u => new { u.UserName, u.Email })
+                     .FirstOrDefaultAsync();
+                 if (SameUser != null)
                  {
                      _logger.LogError("Пользователь с таким именем или почтой уже зарегистрирован");
                      return new AuthResult
@@ -93,94 +96,51 @@ namespace GameRankAuth.Services
 
          public async Task<AuthResult> LogInAsync(LoginRequest request)
          {
-             if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
+             var user = await _userManager.FindByNameAsync(request.Username);
+             if (user == null)
              {
-                 _logger.LogInformation("Попытка Авторизации пользователя");
-                 var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, true);
-                 if (result.IsLockedOut)
-                 {
-                     var context = _httpContextAccessor.HttpContext;
-                     var ip = context.Connection.RemoteIpAddress.ToString();
-                     _logger.LogWarning($"Попытка BruteForce. IP атакующего {ip}");
-                     SuspectUsers suspectUsers = new SuspectUsers
-                     {
-                        Id = "non-authorized",
-                        IpAdress = ip,
-                        cause = "Попытка BruteForce",
-                        Username = "Guest"
-                     };
-                     _adminPanelDBContext.Add(suspectUsers);
-                     _adminPanelDBContext.SaveChanges();
-                    
-                     return new AuthResult
-                     {
-                         Success = false,
-                         Errors = new[]{ "Вы совершили слишком много попыток , в целях безопасности , доступ к авторизации был заблокирован на 5 минут" }
-                     };
-                 }
-
-                 if (result.Succeeded)
-                 {
-                     
-                     _logger.LogInformation("Пользователь авторизован , создание JWT токена");
-                     var getUser = await _userManager.FindByNameAsync(request.Username);
-                     var user = new IdentityUser
-                     {
-                         UserName = request.Username,
-                         Email = getUser.Email,
-                     };
-                     var getEmail =  await _userManager.GetEmailAsync(user);
-                     if (getEmail != null)
-                     {
-                         var token = _jwtTokenService.GenerateToken(getUser);
-                         if (token != null)
-                         {
-                             _logger.LogInformation("Токен создан . Отправка результата");
-                             return new AuthResult
-                             {
-                                 Success = true,
-                                 Token = token,
-                             };
-                         }
-                         else
-                         { 
-                             _logger.LogError("Ошибка создания токена . Возможен Debug");
-                             return new AuthResult
-                             {
-                                 Success = false,
-                                 Errors = new[] { "Ошибка авторизации , попробуйте позже" }
-                             };
-                         }
-                     }
-                     else
-                     {
-                         _logger.LogError("Ошибка запроса в Базу Данных . Требуется Debug");
-                         return new AuthResult
-                         {
-                             Success = false,
-                             Errors = new[] { "Ошибка авторизации , попробуйте позже" }
-                         };
-                     }
-                 }
-                 else
-                 {
-                     _logger.LogError("Неправильное имя или пароль");
-                     return new AuthResult
-                     {
-                         Success = false,
-                         Errors = new[]{ "Неправильное имя или пароль " }
-                     };
-                 }
-             }
-             else
-             {
-                 _logger.LogError("Ошибка сервиса. Требуется Debug");
                  return new AuthResult
                  {
                      Success = false,
-                     Errors = ["Произошла ошибка системы , попробуйте позже"]
+                     Errors = new[] { "Неправильное имя или пароль" }
                  };
              }
+
+             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+    
+             if (result.IsLockedOut)
+             {
+                 // Асинхронное логирование
+                 await LogSuspiciousActivityAsync(request.Username);
+                 return new AuthResult { Success = false, Errors = new[] { "Аккаунт заблокирован" } };
+             }
+
+             if (result.Succeeded)
+             {
+                 var token = _jwtTokenService.GenerateToken(user);
+                 return new AuthResult { Success = true, 
+                     Token = token 
+                 };
+             }
+
+             return new AuthResult { Success = false, Errors = new[] { "Неправильное имя или пароль" } };
+         }
+
+         private async Task LogSuspiciousActivityAsync(string username)
+         {
+             var context = _httpContextAccessor.HttpContext;
+             var ip = context?.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+    
+             var suspectUser = new SuspectUsers
+             {
+                 Id = Guid.NewGuid().ToString(),
+                 IpAdress = ip,
+                 cause = "Попытка BruteForce",
+                 Username = username
+             };
+    
+             _adminPanelDBContext.Add(suspectUser);
+             await _adminPanelDBContext.SaveChangesAsync();
          }
 
     }
