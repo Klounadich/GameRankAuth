@@ -28,8 +28,8 @@ namespace GameRankAuth.Services
         public string GenerateToken(IdentityUser user )
         {
 
-           var role =  _userManager.GetRolesAsync(user).Result.FirstOrDefault();
-           
+           var role = _userManager.GetRolesAsync(user).Result.FirstOrDefault();
+           _logger.LogInformation($"Роль Пользователя :{role}");
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role , role),

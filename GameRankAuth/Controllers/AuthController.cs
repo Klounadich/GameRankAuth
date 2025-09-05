@@ -172,7 +172,7 @@ namespace GameRankAuth.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authorization([FromBody] LoginRequest user)
         {
-            
+            _logger.LogTrace("Авторизация");
             try
             {
                 var result = await _authService.LogInAsync(user);
