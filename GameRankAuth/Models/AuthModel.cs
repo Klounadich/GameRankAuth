@@ -27,3 +27,10 @@ public class AuthResult
     public string? Token { get; set; }
     public string[] Errors { get; set; } = [];
 }
+
+public class PasswordResetRequest
+{
+    public string? email { get; set; }
+    
+    public string? newPassword { get; set; }
+}

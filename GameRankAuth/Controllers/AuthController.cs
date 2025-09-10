@@ -162,6 +162,34 @@ namespace GameRankAuth.Controllers
             return BadRequest(new { Message = "<UNK> <UNK> <UNK>" });
         }
 
+        [HttpPost("password-reset-check")]
+        public async Task<IActionResult> PasswordReset([FromBody] string email)
+        {
+            var checkEmail = await _userManager.FindByEmailAsync(email);
+            if (checkEmail != null)
+            {
+                // отправку кода бы надо 
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetRequest passwordReset)
+        {
+            var getUser = await _userManager.FindByEmailAsync(passwordReset.email);
+            if (getUser != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(getUser);
+                var changepassword = await _userManager.ResetPasswordAsync(getUser, token , passwordReset.newPassword);
+                if (changepassword.Succeeded)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest();
+        }
+
 
 
 
@@ -304,7 +332,7 @@ namespace GameRankAuth.Controllers
                 if (token != null)
                 {
                     HttpContext.Response.SetCookie(token);
-                    return Ok(new { Message = "Успешная авторизация" });
+                    return Ok(new { Message = "Успешная авторизация" }); // Статус передать бы ещё 
                 }
             }
 

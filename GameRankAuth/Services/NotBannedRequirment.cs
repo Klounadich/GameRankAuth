@@ -57,7 +57,7 @@ public class BanCheckMiddleware
                 .FirstOrDefaultAsync();
 
             isBanned = userStatus == "banned";
-            Console.WriteLine($"User status: {userStatus}, isBanned: {isBanned}");
+            
         
             
         }

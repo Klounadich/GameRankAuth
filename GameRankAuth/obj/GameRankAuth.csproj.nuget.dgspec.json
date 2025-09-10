@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj": {}
+    "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj": {}
   },
   "projects": {
-    "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj": {
+    "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
+        "projectUniqueName": "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
         "projectName": "GameRankAuth",
-        "projectPath": "/home/klounadich/DEV/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
+        "projectPath": "/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankAuth.csproj",
         "packagesPath": "/home/klounadich/.nuget/packages/",
-        "outputPath": "/home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/",
+        "outputPath": "/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/klounadich/.nuget/NuGet/NuGet.Config"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -150,10 +150,6 @@
             {
               "name": "Microsoft.NETCore.App.Host.linux-x64",
               "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
             }
           ],
           "frameworkReferences": {
@@ -164,7 +160,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.109/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
