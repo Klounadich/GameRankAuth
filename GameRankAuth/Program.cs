@@ -98,7 +98,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.AllowedForNewUsers = true;
 });
 // -------------------------------------------------------------------------------------------------------------
-//builder.WebHost.UseUrls("http://192.168.0.103:5001");
+builder.WebHost.UseUrls("http://192.168.0.103:5001");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -118,10 +118,10 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole(role));
     }
 }
-
+app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowAll");
-app.UseHttpsRedirection();
+
 
 
 

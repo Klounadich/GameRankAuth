@@ -163,20 +163,29 @@ namespace GameRankAuth.Controllers
         }
 
         [HttpPost("password-reset-check")]
+        [AllowAnonymous]
         public async Task<IActionResult> PasswordReset([FromBody] string email)
         {
+            
             var checkEmail = await _userManager.FindByEmailAsync(email);
             if (checkEmail != null)
             {
                 // отправку кода бы надо 
-                return Ok();
+                
+                return Ok(new { success = true, message = "Код отправлен" });
             }
-            return BadRequest();
+            else
+            {
+                return BadRequest();
+            }
+            
         }
 
         [HttpPost("reset-password")]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] PasswordResetRequest passwordReset)
         {
+            
             var getUser = await _userManager.FindByEmailAsync(passwordReset.email);
             if (getUser != null)
             {
@@ -184,7 +193,7 @@ namespace GameRankAuth.Controllers
                 var changepassword = await _userManager.ResetPasswordAsync(getUser, token , passwordReset.newPassword);
                 if (changepassword.Succeeded)
                 {
-                    return Ok();
+                    return Ok(new { success = true, message = "Пароль Изменён" });
                 }
             }
             return BadRequest();

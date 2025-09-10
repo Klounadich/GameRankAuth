@@ -643,9 +643,8 @@ C:/Users/Ярослав/my pets/GameRankAuth/GameRankAuth/bin/Debug/net8.0/QRCod
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/bin/Debug/net8.0/GameRankAuth.staticwebassets.endpoints.json
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets.build.endpoints.json
 /home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/GameRank.A3535497.Up2Date
-/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets/msbuild.GameRankAuth.Microsoft.AspNetCore.StaticWebAssets.props
-/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets/msbuild.GameRankAuth.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets/msbuild.build.GameRankAuth.props
-/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.GameRankAuth.props
-/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.GameRankAuth.props
-/home/klounadich/dev/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets.pack.json
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/rpswa.dswa.cache.json
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/rjimswa.dswa.cache.json
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/rjsmrazor.dswa.cache.json
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/rjsmcshtml.dswa.cache.json
+/home/klounadich/DEV/GameRankAuth/GameRankAuth/obj/Debug/net8.0/staticwebassets.build.json.cache
