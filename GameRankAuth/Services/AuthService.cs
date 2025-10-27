@@ -32,7 +32,7 @@ namespace GameRankAuth.Services
                  var SameUser = await _context.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email);
                  if (SameUser != false)
                  {
-                     _logger.LogError("Пользователь с таким именем или почтой уже зарегистрирован");
+                     
                      return new AuthResult
                      {
                          Success = false,
@@ -42,7 +42,7 @@ namespace GameRankAuth.Services
                  }
                  else
                  {
-                     _logger.LogInformation("Создание IdentityUser");
+                     
                      var user = new IdentityUser
                      {
                          UserName = request.UserName,
@@ -51,17 +51,17 @@ namespace GameRankAuth.Services
 
                      };
                      var result = await _userManager.CreateAsync(user, request.Password);
-                     _logger.LogInformation("Создание аккаунта ");
+                     _logger.LogInformation("Try to register new user");
                      if (result.Succeeded)
                      {
                          await _userManager.AddToRoleAsync(user, "User");
                          
-                         _logger.LogInformation("Аккаунт создан , генерация JWT токена");
+                        
                          
                          var token = _jwtTokenService.GenerateToken(user);
                          if (token != null)
                          {
-                             _logger.LogInformation("JWT токен создан , отправка результата");
+                             
                              return new AuthResult
                              {
                                  Success = true,
@@ -83,7 +83,7 @@ namespace GameRankAuth.Services
                      }
                  }
              }
-             _logger.LogError("Ошибка сервиса. Требуется Debug");
+             _logger.LogError("Critical Error. Need Debug");
              return new AuthResult
              {
                  Success = false,
@@ -95,13 +95,13 @@ namespace GameRankAuth.Services
          {
              if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
              {
-                 _logger.LogInformation("Попытка Авторизации пользователя");
+                 _logger.LogInformation("Try to login");
                  var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, true);
                  if (result.IsLockedOut)
                  {
                      var context = _httpContextAccessor.HttpContext;
                      var ip = context.Connection.RemoteIpAddress.ToString();
-                     _logger.LogWarning($"Попытка BruteForce. IP атакующего {ip}");
+                     _logger.LogWarning($"BruteForce attempt . Attacking {ip}");
                      SuspectUsers suspectUsers = new SuspectUsers
                      {
                         Id = "non-authorized",
@@ -122,7 +122,7 @@ namespace GameRankAuth.Services
                  if (result.Succeeded)
                  {
                      
-                     _logger.LogInformation("Пользователь авторизован , создание JWT токена");
+                     
                      var getUser = await _userManager.FindByNameAsync(request.Username);
                      var user = new IdentityUser
                      {
@@ -135,7 +135,7 @@ namespace GameRankAuth.Services
                          var token = _jwtTokenService.GenerateToken(getUser);
                          if (token != null)
                          {
-                             _logger.LogInformation("Токен создан . Отправка результата");
+                             
                              return new AuthResult
                              {
                                  Success = true,
@@ -144,7 +144,7 @@ namespace GameRankAuth.Services
                          }
                          else
                          { 
-                             _logger.LogError("Ошибка создания токена . Возможен Debug");
+                             _logger.LogError("JWT Token create error . Check");
                              return new AuthResult
                              {
                                  Success = false,
@@ -164,7 +164,7 @@ namespace GameRankAuth.Services
                  }
                  else
                  {
-                     _logger.LogError("Неправильное имя или пароль");
+                     _logger.LogError("Wrong username or password");
                      return new AuthResult
                      {
                          Success = false,
@@ -174,7 +174,7 @@ namespace GameRankAuth.Services
              }
              else
              {
-                 _logger.LogError("Ошибка сервиса. Требуется Debug");
+                 _logger.LogError("Service Error");
                  return new AuthResult
                  {
                      Success = false,

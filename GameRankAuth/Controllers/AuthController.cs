@@ -70,11 +70,12 @@ namespace GameRankAuth.Controllers
                     {
                         
                         var firsterror= validresult.Errors.First().ErrorMessage;
+                        _logger.LogInformation(firsterror);
                         return BadRequest(new { Message = firsterror });
                     }
                     
                 }
-                _logger.LogInformation("Регистрация");
+                
                 var result = await _authService.RegisterAsync(user);
 
 
@@ -98,7 +99,7 @@ namespace GameRankAuth.Controllers
                             UserName = user.UserName,
 
                         };
-                        _logger.LogInformation($"В админ панель добавлены данные:  {userforadmin}");
+                        _logger.LogInformation($"New user created  {user.UserName}");
                        _adminPanelDBContext.Add(userforadmin);
                         await _adminPanelDBContext.SaveChangesAsync();
                         return Ok(new { Message = "Успешная регистрация" });
@@ -209,7 +210,7 @@ namespace GameRankAuth.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authorization([FromBody] LoginRequest user)
         {
-            _logger.LogTrace("Авторизация");
+            
             try
             {
                 var result = await _authService.LogInAsync(user);
@@ -219,6 +220,7 @@ namespace GameRankAuth.Controllers
 
                     if (token != null)
                     {
+                        _logger.LogInformation("Successfully logged in");
                         HttpContext.Response.SetCookie(token);
                         return Ok(new { Message = "Успешная Авторизация" });
                     }
@@ -273,7 +275,7 @@ namespace GameRankAuth.Controllers
             catch (Exception ex)
             {
                
-                _logger.LogError(ex, "Ошибка генерации QR-кода");
+                _logger.LogError(ex, "Error Get QR Code");
         
                 return StatusCode(500, new 
                 { 
@@ -320,7 +322,8 @@ namespace GameRankAuth.Controllers
         [HttpGet("qr-status/{qrcodeId}")]
         [AllowAnonymous]
         public async Task<IActionResult> CheckQrStatus(string qrcodeId)
-        { Console.WriteLine("начали автор");
+        {   
+            
             var cacheKey = $"qr:{qrcodeId}";
         
             

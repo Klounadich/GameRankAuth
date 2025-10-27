@@ -13,15 +13,19 @@ public class B2Service
     private readonly B2Client _client;
     private readonly string _bucketId;
     private readonly HttpClient _httpClient;
+    private readonly ILogger<B2Service> _logger;
     
 
-    public B2Service(string keyId, string applicationKey, string bucketId)
+    public B2Service(string keyId, string applicationKey, string bucketId   )
     {
         _client = new B2Client(keyId, applicationKey);
-        Console.WriteLine($"KeyId: {keyId}");
-        Console.WriteLine($"ApplicationKey: {applicationKey?.Substring(0, 5)}..."); 
-        Console.WriteLine($"BucketId: {bucketId}");
+      
         _bucketId = bucketId;
+    }
+
+    public B2Service(ILogger<B2Service> logger)
+    {
+        _logger = logger;
     }
 
     public async Task<string> GetFileIdByNameAsync(string fileName)
@@ -36,22 +40,11 @@ public class B2Service
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Исключение в GetFileIdByNameAsync: {ex.Message}");
+           
             return null;
         }
     }
-    public async Task<bool> FileExistsAsync(string fileName)
-    {
-        try
-        {
-            var fileId = await GetFileIdByNameAsync(fileName);
-            return !string.IsNullOrEmpty(fileId);
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    
     public async Task UploadFileAsync(byte[] fileData, string fileName, Dictionary<string, string> fileInfo = null, string contentType = "b2/x-auto", bool autoRetry = true)
     {
         
@@ -59,7 +52,7 @@ public class B2Service
         
         var uploadUrl = await _client.Files.GetUploadUrl(_bucketId);
         
-        Console.WriteLine($"{fileName} /// {uploadUrl} //// {contentType} ////");
+        _logger.LogInformation($" Upload new Image into Database {fileName} /// {uploadUrl} //// {contentType} ////");
         
         
          await _client.Files.Upload(
@@ -72,33 +65,7 @@ public class B2Service
          
     }
     
-    public async Task<string> GenerateAvatarUrlAsync(string filePath, string bucketName, TimeSpan? expiry = null)
-    {
-        try
-        {
-            var keyId = "003cafa7b13f5090000000001";
-            var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
-        
-            
-            var authInfo = await B2Client.AuthorizeAsync(keyId, applicationKey);
-        
-            var baseDownloadUrl = authInfo.DownloadUrl;
-
-          
-            var downloadAuth = await _client.Files.GetDownloadAuthorization(
-                fileNamePrefix: filePath,
-                validDurationInSeconds: (int)(expiry?.TotalSeconds ?? 3600),
-                bucketId: bucketName);
-
-           
-            return $"{baseDownloadUrl}/file/GameRankAvatars/{Uri.EscapeDataString(filePath)}?Authorization={downloadAuth.AuthorizationToken}";
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ошибка при генерации URL: {ex.Message}");
-            throw;
-        }
-    }
+    
     
    
 
@@ -113,11 +80,7 @@ public class B2Service
         await _client.Files.Delete(fileId, fileName);
     }
     
-    public class B2ListFilesResponse
-    {
-        [JsonPropertyName("files")]
-        public List<B2FileInfo> Files { get; set; }
-    }
+    
 
     public class B2FileInfo
     {

@@ -8,6 +8,11 @@ namespace GameRankAuth.Services;
 
 public class AvatarService : IAvatarService
 {
+    private readonly ILogger<AvatarService> _logger;
+    public AvatarService(ILogger<AvatarService> logger)
+    {
+        _logger = logger;
+    }
     public async Task UploadAvatar(IFormFile file, string Id)
     {
         var keyId = "003cafa7b13f5090000000001";
@@ -47,14 +52,14 @@ public class AvatarService : IAvatarService
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при удалении старого файла: {ex.Message}");
+                _logger.LogWarning($"Delete old Image Error: {ex.Message}");
                 
             }
 
             
             var update = Builders<Avatar>.Update.Set(a => a.Link, fileName);
             await collection.UpdateOneAsync(a => a.Id == Id, update);
-            Console.WriteLine($"Обновлен аватар для пользователя {Id}: {fileName}");
+            _logger.LogInformation($"Avatar upd for user {Id}: {fileName}");
         }
         else
         {
@@ -63,9 +68,9 @@ public class AvatarService : IAvatarService
                 Id = Id,
                 Link = fileName,
             };
-            Console.WriteLine($"отправляем: {fileName}");
+            
             collection.InsertOne(addAvatar);
-            Console.WriteLine("отправляено");
+            
 
         }
     }
@@ -89,7 +94,7 @@ public class AvatarService : IAvatarService
             return new FileStreamResult(stream1, "image/jpg");
             
         }
-        Console.WriteLine($"ссылка на аву: {avatarLink.Link}");
+       
         var contentType = avatarLink.Link.EndsWith(".png") ? "image/png" : 
             avatarLink.Link.EndsWith(".jpg") ? "image/jpeg" : 
             "image/jpeg";

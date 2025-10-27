@@ -29,7 +29,7 @@ namespace GameRankAuth.Services
         {
 
            var role = _userManager.GetRolesAsync(user).Result.FirstOrDefault();
-           _logger.LogInformation($"Роль Пользователя :{role}");
+           
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role , role),

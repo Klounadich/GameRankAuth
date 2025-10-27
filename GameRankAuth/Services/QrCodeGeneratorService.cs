@@ -34,7 +34,7 @@ public class QrCodeGeneratorService : IQrCodeGeneratorService
         string redisKey = $"qr:{qrcodeId}";
         TimeSpan expiry = expire - DateTime.Now;
         await _redis.StringSetAsync(redisKey, serialize, expiry);
-        Console.WriteLine("Начали Закинули в редис");
+      
     }
     
     public async Task<QrGenerationResult> GenerateQrCodeImage()

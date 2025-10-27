@@ -119,7 +119,7 @@ namespace GameRankAuth.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeSocialLinks([FromBody] UserData.SocialLinksReq request)
         {
-            Console.WriteLine($"{request.GithubLink}11111111111111111");
+          
             string Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _changeUserDataService.ChangeSocialLinksAsync(Id, request);
             if (result.Success)
@@ -214,7 +214,7 @@ namespace GameRankAuth.Controllers
 
         public async Task<IActionResult> ShowProfileData()
         {
-            Console.WriteLine("начали");
+            
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var user = await _context.Users.Select(x => new
@@ -237,7 +237,7 @@ namespace GameRankAuth.Controllers
             }
             else
             {
-                _logger.LogInformation("улетают");
+                
                 return Ok(new
                 {
                     UserName = user.UserName,
@@ -257,7 +257,7 @@ namespace GameRankAuth.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
         public async Task<IActionResult> DeleteAccount()
         {
-            _logger.LogInformation("Попытка удалить аккаунт");
+            _logger.LogInformation($" User {User.FindFirstValue(ClaimTypes.Name)} try to delete account");
             var id =  User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _changeUserDataService.DeleteAsync(id);
             if (result.Success)
@@ -278,7 +278,7 @@ namespace GameRankAuth.Controllers
             }
             catch (Exception ex)
             {
-                    _logger.LogError("Ошибка удаления JWT токена . Требуется Debug");
+                    _logger.LogError("Error to delete JWT for User . Check");
                 return Conflict(new { Message = "Возникла ошибка сервера , попробуйте позже"});
             }
 
