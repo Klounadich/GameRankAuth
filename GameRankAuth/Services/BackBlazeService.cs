@@ -13,7 +13,6 @@ public class B2Service
     private readonly B2Client _client;
     private readonly string _bucketId;
     private readonly HttpClient _httpClient;
-    private readonly ILogger<B2Service> _logger;
     
 
     public B2Service(string keyId, string applicationKey, string bucketId   )
@@ -23,10 +22,7 @@ public class B2Service
         _bucketId = bucketId;
     }
 
-    public B2Service(ILogger<B2Service> logger)
-    {
-        _logger = logger;
-    }
+    
 
     public async Task<string> GetFileIdByNameAsync(string fileName)
     {
@@ -52,7 +48,7 @@ public class B2Service
         
         var uploadUrl = await _client.Files.GetUploadUrl(_bucketId);
         
-        _logger.LogInformation($" Upload new Image into Database {fileName} /// {uploadUrl} //// {contentType} ////");
+     
         
         
          await _client.Files.Upload(
