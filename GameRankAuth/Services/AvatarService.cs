@@ -83,7 +83,7 @@ public class AvatarService : IAvatarService
         var applicationKey = _configuration["B2Settings:ApplicationKey"];
         var bucketId = _configuration["B2Settings:BucketId"];
         var b2Service = new B2Service(keyId, applicationKey, bucketId);
-        var client = new MongoClient("MongoDBConnection:Connection"); 
+        var client = new MongoClient(_configuration["MongoDBConnection:Connection"]); 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
         var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);
