@@ -8,16 +8,18 @@ namespace GameRankAuth.Services;
 
 public class AvatarService : IAvatarService
 {
+    private readonly IConfiguration _configuration;
     private readonly ILogger<AvatarService> _logger;
-    public AvatarService(ILogger<AvatarService> logger)
+    public AvatarService(ILogger<AvatarService> logger , IConfiguration configuration)
     {
+        _configuration = configuration;
         _logger = logger;
     }
     public async Task UploadAvatar(IFormFile file, string Id)
     {
-        var keyId = "003cafa7b13f5090000000001";
-        var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
-        var bucketId = "3cfafffa072ba1239f850019";
+        var keyId = _configuration["B2Settings:KeyId"];
+        var applicationKey = _configuration["B2Settings:ApplicationKey"];
+        var bucketId = _configuration["B2Settings:BucketId"];
         var b2Service = new B2Service(keyId, applicationKey, bucketId);
         await using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
@@ -28,14 +30,14 @@ public class AvatarService : IAvatarService
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
         if (!allowedExtensions.Contains(fileExtension))
         {
-            throw new ArgumentException("Недопустимый формат файла");
+            throw new ArgumentException("Not supported file extension.");
         }
 
 
         var fileName = $"avatars/{Id}_{Guid.NewGuid()}{fileExtension}";
 
         await b2Service.UploadFileAsync(fileData: fileBytes, fileName: fileName, contentType: file.ContentType);
-        var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
+        var client = new MongoClient("MongoDBConnection:Connection"); 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
         var existingAvatar = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
@@ -77,11 +79,11 @@ public class AvatarService : IAvatarService
 
     public async Task<FileStreamResult> LoadAvatar(string Id)
     {
-        var keyId = "003cafa7b13f5090000000001";
-        var applicationKey = "K003DY8bRqYVeEW3vr0WszLHDbwJdnY";
-        var bucketId = "3cfafffa072ba1239f850019";
+        var keyId = _configuration["B2Settings:KeyId"];
+        var applicationKey = _configuration["B2Settings:ApplicationKey"];
+        var bucketId = _configuration["B2Settings:BucketId"];
         var b2Service = new B2Service(keyId, applicationKey, bucketId);
-        var client = new MongoClient("mongodb://localhost:27017"); // в апсетинг запульнуть 
+        var client = new MongoClient("MongoDBConnection:Connection"); 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
         var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);

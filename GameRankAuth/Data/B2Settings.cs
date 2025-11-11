@@ -1,6 +1,6 @@
 namespace GameRankAuth.Data;
 
-public class B2Settings
+public record B2Settings
 {
     public string KeyId { get; set; } = string.Empty;
     public string ApplicationKey { get; set; } = string.Empty;
