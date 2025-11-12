@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
+using FluentValidation;
 using StackExchange.Redis;
 using GameRankAuth.Services.RabbitMQ;
 using Microsoft.AspNetCore.Authentication;
@@ -33,16 +34,16 @@ namespace GameRankAuth.Controllers
         private readonly RabbitMQService _rabbitMQService;
         private readonly IQrCodeGeneratorService _qrCodGen;
         private readonly AdminPanelDBContext _adminPanelDBContext;
-        
+        private readonly IValidator<RegisterRequest> _registerValidator;    
         private readonly IDatabase _redis;
         
 
         public AuthController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager, JWTTokenService jWTToken, IAuthService authService , 
             ILogger<AuthController> logger , IVerifyService verifyService , RabbitMQService rabbitMQService ,
-            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen , IConnectionMultiplexer redis)
+            AdminPanelDBContext adminPanelDBContext ,  IQrCodeGeneratorService qrCodGen , IConnectionMultiplexer redis  , IValidator<RegisterRequest> registerValidator)
         {
-            _redis = redis.GetDatabase();
+            _redis = redis?.GetDatabase();
             _qrCodGen =  qrCodGen;
             _adminPanelDBContext = adminPanelDBContext;
             _rabbitMQService = rabbitMQService;
@@ -53,6 +54,7 @@ namespace GameRankAuth.Controllers
             _context = context;
             _authService = authService;
             _logger = logger;
+            _registerValidator = registerValidator;
             
         }
         
@@ -61,9 +63,9 @@ namespace GameRankAuth.Controllers
         {
             try
             {
-                var validator = new RegisterValidator();
                 
-                var validresult=validator.Validate(user);
+                
+                var validresult=_registerValidator.Validate(user);
                 if (!validresult.IsValid)
                 {
                     foreach (var error in validresult.Errors)
@@ -132,7 +134,7 @@ namespace GameRankAuth.Controllers
             var result = await _verifyService.VerifyEmailAsync(id);
             if (result.Success)
             {
-                _rabbitMQService.Send();
+                await _rabbitMQService.Send();
                 var token = result.Token;
                 HttpContext.Response.SetCookie(token);
                 return Ok(new { Message = "Почта успешно подтверждена" });
@@ -220,6 +222,7 @@ namespace GameRankAuth.Controllers
 
                     if (token != null)
                     {
+                        
                         _logger.LogInformation("Successfully logged in");
                         HttpContext.Response.SetCookie(token);
                         return Ok(new { Message = "Успешная Авторизация" });

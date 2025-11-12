@@ -29,7 +29,7 @@ public class VerifyEmailService  : IVerifyService
         if (result.Succeeded)
         {
             var updToken =  _jwtTokenService.GenerateToken(user);
-            _logger.LogInformation($"Email confirmed ::: {updToken}");
+            _logger.LogInformation($"Email confirmed ::: ");
             return new AuthResult
             {
                 Success = true,

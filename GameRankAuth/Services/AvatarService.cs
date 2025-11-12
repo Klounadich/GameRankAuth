@@ -37,7 +37,7 @@ public class AvatarService : IAvatarService
         var fileName = $"avatars/{Id}_{Guid.NewGuid()}{fileExtension}";
 
         await b2Service.UploadFileAsync(fileData: fileBytes, fileName: fileName, contentType: file.ContentType);
-        var client = new MongoClient("MongoDBConnection:Connection"); 
+        var client = new MongoClient(_configuration["MongoDBConnection:Connection"]); 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
         var existingAvatar = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();

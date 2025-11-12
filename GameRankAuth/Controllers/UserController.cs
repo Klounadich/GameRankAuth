@@ -217,16 +217,20 @@ namespace GameRankAuth.Controllers
             
             var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var user = await _context.Users.Select(x => new
+            var user = await _context.Users.Where(u => u.Id == getUserId).Select(x => new
             {
-                x.UserName,
+                x.UserName, x.Id, x.Email, x.EmailConfirmed,
+                Description = _context.UsersDescription.Where(a => a.Id == x.Id).Select(a => a.Description)
+                    .FirstOrDefault(),
+                SocialLinks = _context.UsersSocialLinks.Where(a => a.Id == x.Id).Select(u => new
+                {
+                    u.GithubLink,
+                    u.RedditLink,
+                    u.SteamLink
+                }).ToList()
 
-                x.Id,
-                x.Email,
-                x.EmailConfirmed
-            }).FirstOrDefaultAsync(x => x.Id == getUserId);
-            var Description = _context.UsersDescription.Where(x => x.Id == getUserId).Select(x => x.Description).FirstOrDefault();
-            var SocialLinks = _context.UsersSocialLinks.Where((X => X.Id == getUserId)).ToList();
+            }).AsNoTracking().FirstOrDefaultAsync();
+            
             var userForRole = await _userManager.FindByIdAsync(getUserId);
             var role =  await _userManager.GetRolesAsync(userForRole);
 
@@ -244,8 +248,8 @@ namespace GameRankAuth.Controllers
                     Email = user.Email,
                     Role = role,
                     EmailVerified = user.EmailConfirmed,
-                    Description = Description,
-                    SocialLinks = SocialLinks,
+                    Description = user.Description,
+                    SocialLinks = user.SocialLinks,
                     
 
                 });

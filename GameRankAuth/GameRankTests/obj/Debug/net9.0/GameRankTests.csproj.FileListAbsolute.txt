@@ -1,0 +1,6 @@
+/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankTests/obj/Debug/net9.0/GameRankTests.csproj.AssemblyReference.cache
+/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankTests/obj/Debug/net9.0/GameRankTests.GeneratedMSBuildEditorConfig.editorconfig
+/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankTests/obj/Debug/net9.0/GameRankTests.AssemblyInfoInputs.cache
+/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankTests/obj/Debug/net9.0/GameRankTests.AssemblyInfo.cs
+/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankTests/obj/Debug/net9.0/GameRankTests.csproj.CoreCompileInputs.cache
+/home/klounadich/dev/GameRankAuth/GameRankAuth/GameRankTests/obj/Debug/net9.0/GameRankTests.sourcelink.json
