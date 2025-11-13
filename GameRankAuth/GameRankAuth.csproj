@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dcd301e3-1224-4c3a-aec8-4af0398277a4</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+      <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -48,10 +51,10 @@
     <_ContentIncludedByDefault Remove="GameRankAuth.Tests\obj\GameRankAuth.Tests.csproj.nuget.dgspec.json" />
     <_ContentIncludedByDefault Remove="GameRankAuth.Tests\obj\project.assets.json" />
     <_ContentIncludedByDefault Remove="GameRankAuth.Tests\obj\project.packagespec.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="GameRankTests\obj\Debug\" />
+    <_ContentIncludedByDefault Remove="GameRankTests\obj\Debug\net9.0\GameRankTests.sourcelink.json" />
+    <_ContentIncludedByDefault Remove="GameRankTests\obj\GameRankTests.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="GameRankTests\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="GameRankTests\obj\project.packagespec.json" />
   </ItemGroup>
 
 </Project>

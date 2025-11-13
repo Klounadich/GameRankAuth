@@ -4,4 +4,10 @@
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::1FF822E4-379A-4B8C-B8D4-B6545AD05171::net8.0::GameRankAuth.GameRankTests.AuthControllerTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=44adc2ea_002D27be_002D4f45_002Db714_002D2ff98304f54e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	</wpf:ResourceDictionary>

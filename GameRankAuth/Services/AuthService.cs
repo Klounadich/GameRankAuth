@@ -99,8 +99,9 @@ namespace GameRankAuth.Services
                  var result = await  _signInManager.PasswordSignInAsync(request.Username, request.Password, false, true);
                  if (result.IsLockedOut)
                  {
+                     var ip = "127.0.0.1";
                      var context = _httpContextAccessor.HttpContext;
-                     var ip = context.Connection.RemoteIpAddress.ToString();
+                      ip = context.Connection.RemoteIpAddress.ToString();
                      _logger.LogWarning($"BruteForce attempt . Attacking {ip}");
                      SuspectUsers suspectUsers = new SuspectUsers
                      {

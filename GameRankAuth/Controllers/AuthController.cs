@@ -213,6 +213,7 @@ namespace GameRankAuth.Controllers
         public async Task<IActionResult> Authorization([FromBody] LoginRequest user)
         {
             
+
             try
             {
                 var result = await _authService.LogInAsync(user);
@@ -224,7 +225,7 @@ namespace GameRankAuth.Controllers
                     {
                         
                         _logger.LogInformation("Successfully logged in");
-                        HttpContext.Response.SetCookie(token);
+                            HttpContext.Response.SetCookie(token);
                         return Ok(new { Message = "Успешная Авторизация" });
                     }
                     else 
@@ -246,7 +247,7 @@ namespace GameRankAuth.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return BadRequest(new { Message = "Ошибка авторизации , попробуйте позже" });
+                return BadRequest(new { Message = $"Ошибка авторизации , попробуйте позже  {ex.Message}"  });
             }
 
             
