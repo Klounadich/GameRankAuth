@@ -86,8 +86,6 @@ public class AvatarService : IAvatarService
         var client = new MongoClient(_configuration["MongoDBConnection:Connection"]); 
         var database = client.GetDatabase("test");
         var collection = database.GetCollection<Avatar>("avatars");
-        var filter = Builders<BsonDocument>.Filter.Eq("_id", Id);
-        var projection = Builders<BsonDocument>.Projection.Include("Link").Exclude("_id");
         var avatarLink = await collection.Find(a => a.Id == Id).FirstOrDefaultAsync();
         if (avatarLink == null || string.IsNullOrEmpty(avatarLink.Link))
         {
