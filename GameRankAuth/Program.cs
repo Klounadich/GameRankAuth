@@ -14,7 +14,9 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FluentValidation;
 using GameRankAuth.Middleware;
+using GameRankAuth.Modules;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,7 @@ builder.Services.Configure<B2Settings>(builder.Configuration.GetSection("B2Setti
 builder.Services.AddSingleton<B2Settings>(sp => 
     sp.GetRequiredService<IOptions<B2Settings>>().Value);
 builder.Services.AddScoped<IQrCodeGeneratorService, QrCodeGeneratorService>();
+builder.Services.AddScoped<IValidator<RegisterRequest> , RegisterValidator>();
 
 //Redis ------------------------------------------------------
 builder.Services.AddScoped<IDistributedCache, RedisCache>();
