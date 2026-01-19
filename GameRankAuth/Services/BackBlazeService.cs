@@ -78,12 +78,5 @@ public class B2Service
     
     
 
-    public class B2FileInfo
-    {
-        [JsonPropertyName("fileId")]
-        public string FileId { get; set; }
     
-        [JsonPropertyName("fileName")]
-        public string FileName { get; set; }
-    }
 }

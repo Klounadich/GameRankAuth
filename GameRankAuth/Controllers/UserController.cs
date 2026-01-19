@@ -291,8 +291,8 @@ namespace GameRankAuth.Controllers
         
         [HttpPost("set-avatar")]
         [Authorize]
-        public async Task<IActionResult> SetAvatar(IFormFile file)
-        {
+        public async Task<IActionResult> SetAvatar(IFormFile file) {
+        
             try
             {
                 var getUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
