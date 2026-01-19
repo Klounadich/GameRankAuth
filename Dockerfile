@@ -4,7 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-ENV ASPNETCORE_URLS=http://192.168.0.103:5001
+
 EXPOSE 8080
 EXPOSE 8081
 
